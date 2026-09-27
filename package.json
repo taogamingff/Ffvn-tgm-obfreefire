@@ -1,0 +1,12 @@
+{
+  "name": "ff-ob-prediction-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Free Fire OB Prediction API - Vercel Serverless",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
