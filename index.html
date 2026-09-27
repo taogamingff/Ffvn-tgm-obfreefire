@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"
+>
+
+<title>
+  DỰ ĐOÁN NGÀY CẬP NHẬT FREE FIRE OB 🔥
+</title>
+
+<meta
+  name="description"
+  content="Công cụ tra cứu và dự đoán ngày cập nhật Free Fire OB theo dữ liệu lịch sử."
+>
+
+<style>
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root{
+  --orange:#ff6b00;
+  --orange2:#ff9d00;
+  --bg:#050505;
+  --card:rgba(255,255,255,.065);
+  --border:rgba(255,255,255,.12);
+  --text:#fff;
+  --muted:#aaa;
+}
+
+body{
+  min-height:100vh;
+  color:var(--text);
+  background:
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(255,106,0,.22),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 100%,
+      rgba(255,55,0,.16),
+      transparent 30%
+    ),
+    linear-gradient(
+      135deg,
+      #020202,
+      #101010,
+      #030303
+    );
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+}
+
+button,
+input{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.container{
+  width:100%;
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+.header{
+  text-align:center;
+  padding:25px 0 20px;
+}
+
+.logo{
+  width:90px;
+  height:90px;
+  object-fit:cover;
+  border-radius:24px;
+  box-shadow:
+    0 0 0 1px #ffffff15,
+    0 0 35px #ff650080;
+}
+
+.title{
+  margin-top:16px;
+  font-size:
+    clamp(25px,6vw,46px);
+  font-weight:1000;
+  line-height:1.1;
+}
+
+.title span{
+  color:var(--orange);
+}
+
+.subtitle{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+
+/* ============================================================
+   MENU
+============================================================ */
+
+.menu-button{
+  position:fixed;
+  top:18px;
+  right:18px;
+  z-index:1000;
+  width:52px;
+  height:52px;
+  border:1px solid #ffffff20;
+  border-radius:16px;
+  color:#fff;
+  background:#111c;
+  backdrop-filter:blur(18px);
+  font-size:25px;
+}
+
+.menu{
+  position:fixed;
+  top:78px;
+  right:18px;
+  z-index:999;
+  width:250px;
+  display:none;
+  padding:15px;
+  border:1px solid var(--border);
+  border-radius:20px;
+  background:#111e;
+  backdrop-filter:blur(25px);
+  box-shadow:0 20px 60px #000b;
+}
+
+.menu.open{
+  display:block;
+}
+
+.menu-title{
+  color:#ff8a00;
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:10px;
+}
+
+.lang{
+  width:100%;
+  border:1px solid #ffffff12;
+  border-radius:12px;
+  padding:12px;
+  margin-top:7px;
+  text-align:left;
+  color:#fff;
+  background:#ffffff08;
+}
+
+.lang:hover{
+  background:#ff690020;
+}
+
+
+/* ============================================================
+   CARD
+============================================================ */
+
+.card{
+  margin-bottom:18px;
+  padding:22px;
+  border:1px solid var(--border);
+  border-radius:25px;
+  background:var(--card);
+  backdrop-filter:blur(20px);
+  box-shadow:
+    0 20px 70px #0008;
+}
+
+.card-title{
+  margin-bottom:15px;
+  font-size:18px;
+  font-weight:1000;
+}
+
+
+/* ============================================================
+   INPUT
+============================================================ */
+
+.input-row{
+  display:grid;
+  grid-template-columns:1fr 170px;
+  gap:12px;
+}
+
+.input{
+  width:100%;
+  height:58px;
+  padding:0 18px;
+  outline:none;
+  border:1px solid #ffffff18;
+  border-radius:15px;
+  color:#fff;
+  background:#0009;
+  font-size:18px;
+}
+
+.input:focus{
+  border-color:#ff7000;
+  box-shadow:
+    0 0 0 3px #ff700020;
+}
+
+.predict{
+  height:58px;
+  border:0;
+  border-radius:15px;
+  color:#fff;
+  background:
+    linear-gradient(
+      135deg,
+      #ff9a00,
+      #ff4200
+    );
+  font-weight:1000;
+  box-shadow:
+    0 10px 30px #ff510050;
+}
+
+.predict:active{
+  transform:scale(.98);
+}
+
+
+/* ============================================================
+   API URL
+============================================================ */
+
+.api-box{
+  margin-top:15px;
+  padding:14px;
+  border-radius:15px;
+  background:#0007;
+  border:1px solid #ffffff0e;
+}
+
+.api-label{
+  display:block;
+  margin-bottom:7px;
+  color:#999;
+  font-size:12px;
+  font-weight:800;
+}
+
+.api-url{
+  width:100%;
+  overflow:auto;
+  color:#ff9a32;
+  font-family:monospace;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+
+/* ============================================================
+   RESULT
+============================================================ */
+
+.result{
+  display:none;
+}
+
+.result.show{
+  display:block;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:8px 13px;
+  border-radius:999px;
+  color:#ffad63;
+  background:#ff700018;
+  font-size:12px;
+  font-weight:1000;
+}
+
+.result-ob{
+  margin-top:14px;
+  font-size:38px;
+  font-weight:1000;
+}
+
+.result-date{
+  margin-top:7px;
+  font-size:
+    clamp(21px,5vw,32px);
+  font-weight:900;
+}
+
+.result-info{
+  margin-top:15px;
+  padding:15px;
+  border-radius:15px;
+  color:#bbb;
+  background:#0007;
+  line-height:1.7;
+  font-size:14px;
+}
+
+.warning{
+  margin-top:12px;
+  padding:14px;
+  border-radius:14px;
+  color:#ffc078;
+  background:#ff8a0012;
+  border:1px solid #ff8a0030;
+  font-size:13px;
+  line-height:1.6;
+}
+
+
+/* ============================================================
+   SERVERS
+============================================================ */
+
+.server-grid{
+  display:grid;
+  grid-template-columns:
+    repeat(3,1fr);
+  gap:12px;
+}
+
+.server{
+  padding:16px;
+  border:1px solid #ffffff10;
+  border-radius:17px;
+  background:#0005;
+}
+
+.server-top{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.server-icon{
+  font-size:27px;
+}
+
+.server-name{
+  font-weight:900;
+}
+
+.server-time{
+  margin-top:12px;
+  color:#ff9b3d;
+  font-family:monospace;
+  font-size:14px;
+}
+
+.server-zone{
+  margin-top:5px;
+  color:#777;
+  font-size:11px;
+}
+
+
+/* ============================================================
+   HISTORY
+============================================================ */
+
+.history{
+  display:grid;
+  grid-template-columns:
+    repeat(2,1fr);
+  gap:10px;
+}
+
+.history-item{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:14px;
+  border:1px solid #ffffff0d;
+  border-radius:15px;
+  background:#0005;
+}
+
+.history-ob{
+  color:#ff7600;
+  font-weight:1000;
+}
+
+.history-date{
+  color:#bbb;
+  font-size:13px;
+}
+
+
+/* ============================================================
+   FOOTER
+============================================================ */
+
+.footer{
+  padding:25px 0 10px;
+  text-align:center;
+  color:#666;
+  font-size:12px;
+}
+
+.footer a{
+  color:#ff7800;
+  text-decoration:none;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media(max-width:750px){
+
+  .container{
+    padding:12px;
+  }
+
+  .input-row{
+    grid-template-columns:1fr;
+  }
+
+  .server-grid{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+  .history{
+    grid-template-columns:1fr;
+  }
+
+}
+
+@media(max-width:480px){
+
+  .card{
+    padding:16px;
+    border-radius:20px;
+  }
+
+  .server-grid{
+    grid-template-columns:1fr;
+  }
+
+  .result-ob{
+    font-size:32px;
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==========================================================
+     MENU
+=========================================================== -->
+
+<button
+  id="menuButton"
+  class="menu-button"
+  aria-label="Menu"
+>
+  ☰
+</button>
+
+
+<div
+  id="menu"
+  class="menu"
+>
+
+  <div
+    id="languageTitle"
+    class="menu-title"
+  >
+    NGÔN NGỮ
+  </div>
+
+  <button
+    class="lang"
+    onclick="setLanguage('vi')"
+  >
+    🇻🇳 Tiếng Việt
+  </button>
+
+  <button
+    class="lang"
+    onclick="setLanguage('en')"
+  >
+    🇺🇸 English
+  </button>
+
+  <button
+    class="lang"
+    onclick="setLanguage('id')"
+  >
+    🇮🇩 Indonesia
+  </button>
+
+  <button
+    class="lang"
+    onclick="setLanguage('zh')"
+  >
+    🇨🇳 中文
+  </button>
+
+</div>
+
+
+<div class="container">
+
+
+<!-- ==========================================================
+     HEADER
+=========================================================== -->
+
+<header class="header">
+
+  <img
+    class="logo"
+    src="https://cdn.imagetourls.com/uploads/tyImg/1ggIdgxtr.jpg"
+    alt="FFVN.TGM"
+  >
+
+  <h1
+    id="title"
+    class="title"
+  >
+    DỰ ĐOÁN <span>OB FREE FIRE</span> 🔥
+  </h1>
+
+  <p
+    id="subtitle"
+    class="subtitle"
+  >
+    Nhập OB để tra cứu hoặc dự đoán ngày cập nhật
+  </p>
+
+</header>
+
+
+<!-- ==========================================================
+     INPUT
+=========================================================== -->
+
+<section class="card">
+
+  <div
+    id="inputTitle"
+    class="card-title"
+  >
+    🔎 NHẬP OB
+  </div>
+
+  <div class="input-row">
+
+    <input
+      id="obInput"
+      class="input"
+      type="text"
+      inputmode="numeric"
+      autocomplete="off"
+      placeholder="Ví dụ: OB55 hoặc 55"
+    >
+
+    <button
+      id="predictButton"
+      class="predict"
+      onclick="predictOB()"
+    >
+      DỰ ĐOÁN
+    </button>
+
+  </div>
+
+
+  <!-- API URL -->
+
+  <div class="api-box">
+
+    <span
+      id="apiLabel"
+      class="api-label"
+    >
+      API URL
+    </span>
+
+    <div
+      id="apiUrl"
+      class="api-url"
+    >
+      /api/ob?ob=xxxx
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ==========================================================
+     RESULT
+=========================================================== -->
+
+<section
+  id="result"
+  class="card result"
+>
+
+  <span
+    id="resultBadge"
+    class="badge"
+  >
+    🔎 ĐANG XỬ LÝ
+  </span>
+
+  <div
+    id="resultOB"
+    class="result-ob"
+  >
+    OB--
+  </div>
+
+  <div
+    id="resultDate"
+    class="result-date"
+  >
+    --
+  </div>
+
+  <div
+    id="resultInfo"
+    class="result-info"
+  >
+  </div>
+
+  <div
+    id="warning"
+    class="warning"
+  >
+  </div>
+
+</section>
+
+
+<!-- ==========================================================
+     SERVER
+=========================================================== -->
+
+<section class="card">
+
+  <div
+    id="serverTitle"
+    class="card-title"
+  >
+    🌍 THỜI GIAN CẬP NHẬT THEO SERVER
+  </div>
+
+  <div
+    id="serverGrid"
+    class="server-grid"
+  >
+    <div class="server">
+      Đang tải...
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ==========================================================
+     HISTORY
+=========================================================== -->
+
+<section class="card">
+
+  <div
+    id="historyTitle"
+    class="card-title"
+  >
+    📅 LỊCH SỬ OB
+  </div>
+
+  <div
+    id="history"
+    class="history"
+  >
+    Đang tải...
+  </div>
+
+</section>
+
+
+<footer class="footer">
+
+  FFVN.TGM • Free Fire OB Prediction API
+
+  <br><br>
+
+  <a
+    href="/api/ob"
+    target="_blank"
+  >
+    MỞ API JSON
+  </a>
+
+</footer>
+
+
+</div>
+
+
+<script>
+
+
+// ============================================================
+// CONFIG
+// ============================================================
+
+const API_URL =
+  window.location.origin + "/api/ob";
+
+
+// ============================================================
+// LANGUAGE
+// ============================================================
+
+const LANG = {
+
+  vi:{
+    title:"DỰ ĐOÁN OB FREE FIRE 🔥",
+    subtitle:
+      "Nhập OB để tra cứu hoặc dự đoán ngày cập nhật",
+    input:
+      "🔎 NHẬP OB",
+    button:
+      "DỰ ĐOÁN",
+    api:
+      "API URL",
+    server:
+      "🌍 THỜI GIAN CẬP NHẬT THEO SERVER",
+    history:
+      "📅 LỊCH SỬ OB",
+    menu:
+      "NGÔN NGỮ",
+    placeholder:
+      "Ví dụ: OB55 hoặc 55",
+    known:
+      "✅ ĐÃ CÓ DỮ LIỆU",
+    prediction:
+      "🔮 DỰ ĐOÁN",
+    error:
+      "❌ LỖI API"
+  },
+
+  en:{
+    title:"FREE FIRE OB PREDICTION 🔥",
+    subtitle:
+      "Enter an OB version to check or predict the update date",
+    input:
+      "🔎 ENTER OB",
+    button:
+      "PREDICT",
+    api:
+      "API URL",
+    server:
+      "🌍 UPDATE TIME BY SERVER",
+    history:
+      "📅 OB HISTORY",
+    menu:
+      "LANGUAGE",
+    placeholder:
+      "Example: OB55 or 55",
+    known:
+      "✅ DATA AVAILABLE",
+    prediction:
+      "🔮 PREDICTION",
+    error:
+      "❌ API ERROR"
+  },
+
+  id:{
+    title:"PREDIKSI OB FREE FIRE 🔥",
+    subtitle:
+      "Masukkan OB untuk memeriksa atau memprediksi tanggal update",
+    input:
+      "🔎 MASUKKAN OB",
+    button:
+      "PREDIKSI",
+    api:
+      "URL API",
+    server:
+      "🌍 WAKTU UPDATE BERDASARKAN SERVER",
+    history:
+      "📅 RIWAYAT OB",
+    menu:
+      "BAHASA",
+    placeholder:
+      "Contoh: OB55 atau 55",
+    known:
+      "✅ DATA TERSEDIA",
+    prediction:
+      "🔮 PREDIKSI",
+    error:
+      "❌ API ERROR"
+  },
+
+  zh:{
+    title:"FREE FIRE OB 预测 🔥",
+    subtitle:
+      "输入 OB 版本以查询或预测更新时间",
+    input:
+      "🔎 输入 OB",
+    button:
+      "预测",
+    api:
+      "API 地址",
+    server:
+      "🌍 各服务器更新时间",
+    history:
+      "📅 OB 历史",
+    menu:
+      "语言",
+    placeholder:
+      "例如：OB55 或 55",
+    known:
+      "✅ 已有数据",
+    prediction:
+      "🔮 预测",
+    error:
+      "❌ API 错误"
+  }
+
+};
+
+
+let currentLanguage =
+  localStorage.getItem(
+    "ff_ob_language"
+  ) || "vi";
+
+
+function setLanguage(language){
+
+  if(!LANG[language]){
+    return;
+  }
+
+  currentLanguage =
+    language;
+
+  localStorage.setItem(
+    "ff_ob_language",
+    language
+  );
+
+  const t =
+    LANG[language];
+
+  document.documentElement
+    .lang = language;
+
+  document.getElementById(
+    "title"
+  ).textContent = t.title;
+
+  document.getElementById(
+    "subtitle"
+  ).textContent = t.subtitle;
+
+  document.getElementById(
+    "inputTitle"
+  ).textContent = t.input;
+
+  document.getElementById(
+    "predictButton"
+  ).textContent = t.button;
+
+  document.getElementById(
+    "apiLabel"
+  ).textContent = t.api;
+
+  document.getElementById(
+    "serverTitle"
+  ).textContent = t.server;
+
+  document.getElementById(
+    "historyTitle"
+  ).textContent = t.history;
+
+  document.getElementById(
+    "languageTitle"
+  ).textContent = t.menu;
+
+  document.getElementById(
+    "obInput"
+  ).placeholder =
+    t.placeholder;
+
+}
+
+
+// ============================================================
+// MENU
+// ============================================================
+
+document
+  .getElementById("menuButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      document
+        .getElementById("menu")
+        .classList.toggle("open");
+
+    }
+  );
+
+
+// ============================================================
+// NORMALIZE OB
+// ============================================================
+
+function normalizeOB(value){
+
+  const clean =
+    String(value || "")
+      .trim()
+      .toUpperCase()
+      .replace(/^OB/,"")
+      .replace(/[^0-9]/g,"");
+
+  if(!clean){
+    return null;
+  }
+
+  const number =
+    Number(clean);
+
+  if(
+    !Number.isInteger(number) ||
+    number < 1 ||
+    number > 999
+  ){
+    return null;
+  }
+
+  return number;
+}
+
+
+// ============================================================
+// UPDATE URL PREVIEW
+// ============================================================
+
+function updateAPIUrl(){
+
+  const number =
+    normalizeOB(
+      document.getElementById(
+        "obInput"
+      ).value
+    );
+
+  const box =
+    document.getElementById(
+      "apiUrl"
+    );
+
+  if(!number){
+
+    box.textContent =
+      API_URL + "?ob=xxxx";
+
+    return;
+  }
+
+  box.textContent =
+    API_URL +
+    "?ob=" +
+    number;
+
+}
+
+
+// ============================================================
+// INPUT
+// ============================================================
+
+document
+  .getElementById("obInput")
+  .addEventListener(
+    "input",
+    updateAPIUrl
+  );
+
+document
+  .getElementById("obInput")
+  .addEventListener(
+    "keydown",
+    event => {
+
+      if(event.key === "Enter"){
+        predictOB();
+      }
+
+    }
+  );
+
+
+// ============================================================
+// PREDICT
+// ============================================================
+
+async function predictOB(){
+
+  const raw =
+    document.getElementById(
+      "obInput"
+    ).value;
+
+  const ob =
+    normalizeOB(raw);
+
+  const result =
+    document.getElementById(
+      "result"
+    );
+
+  const t =
+    LANG[currentLanguage];
+
+  if(!ob){
+
+    alert(
+      currentLanguage === "vi"
+        ? "Vui lòng nhập OB hợp lệ."
+        : "Please enter a valid OB."
+    );
+
+    return;
+  }
+
+  result.classList.add("show");
+
+  document.getElementById(
+    "resultBadge"
+  ).textContent =
+    "⏳ " +
+    (
+      currentLanguage === "vi"
+        ? "ĐANG XỬ LÝ"
+        : "LOADING"
+    );
+
+  document.getElementById(
+    "resultOB"
+  ).textContent =
+    "OB" + ob;
+
+  document.getElementById(
+    "resultDate"
+  ).textContent =
+    "...";
+
+  document.getElementById(
+    "resultInfo"
+  ).textContent =
+    "";
+
+  document.getElementById(
+    "warning"
+  ).textContent =
+    "";
+
+  updateAPIUrl();
+
+  try{
+
+    const response =
+      await fetch(
+        API_URL +
+        "?ob=" +
+        encodeURIComponent(ob),
+        {
+          method:"GET",
+          cache:"no-store"
+        }
+      );
+
+    if(!response.ok){
+
+      throw new Error(
+        "HTTP " +
+        response.status
+      );
+
+    }
+
+    const data =
+      await response.json();
+
+    if(!data.success){
+
+      throw new Error(
+        data.error ||
+        "API Error"
+      );
+
+    }
+
+
+    // ========================================================
+    // BADGE
+    // ========================================================
+
+    if(data.type === "confirmed"){
+
+      document.getElementById(
+        "resultBadge"
+      ).textContent =
+        t.known;
+
+    }else{
+
+      document.getElementById(
+        "resultBadge"
+      ).textContent =
+        t.prediction;
+
+    }
+
+
+    // ========================================================
+    // RESULT
+    // ========================================================
+
+    document.getElementById(
+      "resultOB"
+    ).textContent =
+      data.ob;
+
+    document.getElementById(
+      "resultDate"
+    ).textContent =
+      data.displayDate;
+
+
+    // ========================================================
+    // INFO
+    // ========================================================
+
+    let info = "";
+
+    if(data.confirmed){
+
+      info +=
+        "✓ " +
+        (
+          currentLanguage === "vi"
+            ? "Dữ liệu đã được xác nhận trong cơ sở dữ liệu."
+            : "Confirmed data in database."
+        );
+
+    }else{
+
+      info +=
+        "🔮 " +
+        (
+          currentLanguage === "vi"
+            ? "Ngày được tính từ dữ liệu lịch sử."
+            : "Date calculated from historical data."
+        );
+
+    }
+
+    if(data.averageIntervalDays){
+
+      info +=
+        "<br>📊 " +
+        (
+          currentLanguage === "vi"
+            ? "Khoảng trung bình: "
+            : "Average interval: "
+        ) +
+        data.averageIntervalDays +
+        " " +
+        (
+          currentLanguage === "vi"
+            ? "ngày"
+            : "days"
+        );
+
+    }
+
+    document.getElementById(
+      "resultInfo"
+    ).innerHTML =
+      info;
+
+
+    // ========================================================
+    // WARNING
+    // ========================================================
+
+    document.getElementById(
+      "warning"
+    ).textContent =
+      data.confirmed
+        ? (
+            currentLanguage === "vi"
+              ? "Nguồn dữ liệu: " +
+                (data.source || "Database")
+              : "Data source: " +
+                (data.source || "Database")
+          )
+        : (
+            currentLanguage === "vi"
+              ? "⚠️ Đây là dự đoán thống kê, không phải xác nhận chính thức của Garena. Không thể đảm bảo 100% cho ngày OB tương lai."
+              : "⚠️ This is a statistical prediction, not an official Garena confirmation."
+          );
+
+
+    // ========================================================
+    // SERVERS
+    // ========================================================
+
+    renderServers(
+      data.servers || []
+    );
+
+
+  }catch(error){
+
+    document.getElementById(
+      "resultBadge"
+    ).textContent =
+      t.error;
+
+    document.getElementById(
+      "resultDate"
+    ).textContent =
+      "--";
+
+    document.getElementById(
+      "resultInfo"
+    ).textContent =
+      error.message;
+
+    document.getElementById(
+      "warning"
+    ).textContent =
+      currentLanguage === "vi"
+        ? "Không thể kết nối API. Hãy kiểm tra lại URL /api/ob."
+        : "Could not connect to API.";
+
+  }
+
+}
+
+
+// ============================================================
+// RENDER SERVER
+// ============================================================
+
+function renderServers(servers){
+
+  const grid =
+    document.getElementById(
+      "serverGrid"
+    );
+
+  if(!servers.length){
+
+    grid.innerHTML =
+      "<div class='server'>Chưa có dữ liệu server.</div>";
+
+    return;
+  }
+
+  grid.innerHTML =
+    servers
+      .map(server => {
+
+        return `
+
+          <div class="server">
+
+            <div class="server-top">
+
+              <span class="server-icon">
+                ${escapeHTML(server.icon)}
+              </span>
+
+              <span class="server-name">
+                ${escapeHTML(server.name)}
+              </span>
+
+            </div>
+
+            <div class="server-time">
+              ${escapeHTML(
+                server.localTime ||
+                "--"
+              )}
+            </div>
+
+            <div class="server-zone">
+              ${escapeHTML(
+                server.offset ||
+                ""
+              )}
+            </div>
+
+          </div>
+
+        `;
+
+      })
+      .join("");
+
+}
+
+
+// ============================================================
+// HISTORY
+// ============================================================
+
+async function loadHistory(){
+
+  const box =
+    document.getElementById(
+      "history"
+    );
+
+  try{
+
+    const response =
+      await fetch(
+        API_URL +
+        "?all=true",
+        {
+          cache:"no-store"
+        }
+      );
+
+    if(!response.ok){
+      throw new Error("API");
+    }
+
+    const data =
+      await response.json();
+
+    if(
+      !data.success ||
+      !Array.isArray(data.data)
+    ){
+
+      throw new Error("DATA");
+
+    }
+
+    const sorted =
+      [...data.data]
+        .sort(
+          (a,b) =>
+            Number(
+              String(b.ob)
+                .replace("OB","")
+            ) -
+            Number(
+              String(a.ob)
+                .replace("OB","")
+            )
+        );
+
+    box.innerHTML =
+      sorted
+        .map(item => {
+
+          return `
+
+            <div class="history-item">
+
+              <span class="history-ob">
+                ${escapeHTML(item.ob)}
+              </span>
+
+              <span class="history-date">
+                ${escapeHTML(
+                  item.displayDate
+                )}
+              </span>
+
+            </div>
+
+          `;
+
+        })
+        .join("");
+
+  }catch(error){
+
+    box.innerHTML =
+      `
+      <div class="history-item">
+        ❌ Không thể tải dữ liệu.
+      </div>
+      `;
+
+  }
+
+}
+
+
+// ============================================================
+// ESCAPE HTML
+// ============================================================
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+// ============================================================
+// INIT
+// ============================================================
+
+setLanguage(
+  currentLanguage
+);
+
+loadHistory();
+
+updateAPIUrl();
+
+</script>
+
+</body>
+
+    </html>
