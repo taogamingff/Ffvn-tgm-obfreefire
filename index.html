@@ -1,1481 +1,1535 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"
->
-
-<title>
-  DỰ ĐOÁN NGÀY CẬP NHẬT FREE FIRE OB 🔥
-</title>
+<title>CÔNG CỤ DỰ ĐOÁN OB FREE FIRE 🔥</title>
 
 <meta
   name="description"
-  content="Công cụ tra cứu và dự đoán ngày cập nhật Free Fire OB theo dữ liệu lịch sử."
+  content="Công cụ dự đoán lịch cập nhật OB Free Fire dựa trên dữ liệu lịch sử được cấu hình."
 >
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg:#050609;
+  --card:rgba(18,18,24,.78);
+  --border:rgba(255,255,255,.10);
+  --orange:#ff7a00;
+  --orange2:#ffb000;
+  --text:#fff;
+  --muted:#9fa3ad;
+  --green:#38e58c;
+  --red:#ff4f5e;
+  --blue:#55a7ff;
+}
 
 *{
   box-sizing:border-box;
-  margin:0;
-  padding:0;
 }
 
-:root{
-  --orange:#ff6b00;
-  --orange2:#ff9d00;
-  --bg:#050505;
-  --card:rgba(255,255,255,.065);
-  --border:rgba(255,255,255,.12);
-  --text:#fff;
-  --muted:#aaa;
+html{
+  scroll-behavior:smooth;
 }
 
 body{
+  margin:0;
   min-height:100vh;
-  color:var(--text);
   background:
-    radial-gradient(
-      circle at 10% 0%,
-      rgba(255,106,0,.22),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at 90% 100%,
-      rgba(255,55,0,.16),
-      transparent 30%
-    ),
+    radial-gradient(circle at 20% 10%,rgba(255,122,0,.18),transparent 30%),
+    radial-gradient(circle at 90% 20%,rgba(255,176,0,.10),transparent 25%),
+    linear-gradient(135deg,#030406,#090a0f 50%,#020203);
+  color:var(--text);
+  font-family:Rajdhani,Arial,sans-serif;
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
     linear-gradient(
-      135deg,
-      #020202,
-      #101010,
-      #030303
+      120deg,
+      transparent 0%,
+      rgba(255,255,255,.025) 45%,
+      transparent 55%
     );
-  font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
+  animation:shine 8s linear infinite;
 }
 
-button,
-input{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
+@keyframes shine{
+  from{transform:translateX(-100%)}
+  to{transform:translateX(100%)}
 }
 
 .container{
-  width:100%;
-  max-width:1100px;
+  width:min(1180px,94%);
   margin:auto;
-  padding:20px;
 }
 
-
-/* ============================================================
-   HEADER
-============================================================ */
-
-.header{
+header{
+  padding:70px 0 35px;
   text-align:center;
-  padding:25px 0 20px;
 }
 
 .logo{
-  width:90px;
-  height:90px;
-  object-fit:cover;
+  width:92px;
+  height:92px;
   border-radius:24px;
+  object-fit:cover;
   box-shadow:
-    0 0 0 1px #ffffff15,
-    0 0 35px #ff650080;
+    0 0 20px rgba(255,122,0,.35),
+    0 0 70px rgba(255,122,0,.12);
 }
 
-.title{
-  margin-top:16px;
-  font-size:
-    clamp(25px,6vw,46px);
-  font-weight:1000;
-  line-height:1.1;
+h1{
+  margin:22px 0 8px;
+  font-size:clamp(30px,6vw,58px);
+  line-height:1;
+  letter-spacing:1px;
+  font-weight:700;
 }
 
-.title span{
+h1 span{
   color:var(--orange);
 }
 
 .subtitle{
-  margin-top:10px;
   color:var(--muted);
-  font-size:14px;
-}
-
-
-/* ============================================================
-   MENU
-============================================================ */
-
-.menu-button{
-  position:fixed;
-  top:18px;
-  right:18px;
-  z-index:1000;
-  width:52px;
-  height:52px;
-  border:1px solid #ffffff20;
-  border-radius:16px;
-  color:#fff;
-  background:#111c;
-  backdrop-filter:blur(18px);
-  font-size:25px;
-}
-
-.menu{
-  position:fixed;
-  top:78px;
-  right:18px;
-  z-index:999;
-  width:250px;
-  display:none;
-  padding:15px;
-  border:1px solid var(--border);
-  border-radius:20px;
-  background:#111e;
-  backdrop-filter:blur(25px);
-  box-shadow:0 20px 60px #000b;
-}
-
-.menu.open{
-  display:block;
-}
-
-.menu-title{
-  color:#ff8a00;
-  font-size:13px;
-  font-weight:900;
-  margin-bottom:10px;
-}
-
-.lang{
-  width:100%;
-  border:1px solid #ffffff12;
-  border-radius:12px;
-  padding:12px;
-  margin-top:7px;
-  text-align:left;
-  color:#fff;
-  background:#ffffff08;
-}
-
-.lang:hover{
-  background:#ff690020;
-}
-
-
-/* ============================================================
-   CARD
-============================================================ */
-
-.card{
-  margin-bottom:18px;
-  padding:22px;
-  border:1px solid var(--border);
-  border-radius:25px;
-  background:var(--card);
-  backdrop-filter:blur(20px);
-  box-shadow:
-    0 20px 70px #0008;
-}
-
-.card-title{
-  margin-bottom:15px;
-  font-size:18px;
-  font-weight:1000;
-}
-
-
-/* ============================================================
-   INPUT
-============================================================ */
-
-.input-row{
-  display:grid;
-  grid-template-columns:1fr 170px;
-  gap:12px;
-}
-
-.input{
-  width:100%;
-  height:58px;
-  padding:0 18px;
-  outline:none;
-  border:1px solid #ffffff18;
-  border-radius:15px;
-  color:#fff;
-  background:#0009;
-  font-size:18px;
-}
-
-.input:focus{
-  border-color:#ff7000;
-  box-shadow:
-    0 0 0 3px #ff700020;
-}
-
-.predict{
-  height:58px;
-  border:0;
-  border-radius:15px;
-  color:#fff;
-  background:
-    linear-gradient(
-      135deg,
-      #ff9a00,
-      #ff4200
-    );
-  font-weight:1000;
-  box-shadow:
-    0 10px 30px #ff510050;
-}
-
-.predict:active{
-  transform:scale(.98);
-}
-
-
-/* ============================================================
-   API URL
-============================================================ */
-
-.api-box{
-  margin-top:15px;
-  padding:14px;
-  border-radius:15px;
-  background:#0007;
-  border:1px solid #ffffff0e;
-}
-
-.api-label{
-  display:block;
-  margin-bottom:7px;
-  color:#999;
-  font-size:12px;
-  font-weight:800;
-}
-
-.api-url{
-  width:100%;
-  overflow:auto;
-  color:#ff9a32;
-  font-family:monospace;
-  font-size:13px;
-  white-space:nowrap;
-}
-
-
-/* ============================================================
-   RESULT
-============================================================ */
-
-.result{
-  display:none;
-}
-
-.result.show{
-  display:block;
-}
-
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  padding:8px 13px;
-  border-radius:999px;
-  color:#ffad63;
-  background:#ff700018;
-  font-size:12px;
-  font-weight:1000;
-}
-
-.result-ob{
-  margin-top:14px;
-  font-size:38px;
-  font-weight:1000;
-}
-
-.result-date{
-  margin-top:7px;
-  font-size:
-    clamp(21px,5vw,32px);
-  font-weight:900;
-}
-
-.result-info{
-  margin-top:15px;
-  padding:15px;
-  border-radius:15px;
-  color:#bbb;
-  background:#0007;
-  line-height:1.7;
-  font-size:14px;
+  font-size:17px;
+  max-width:750px;
+  margin:auto;
 }
 
 .warning{
-  margin-top:12px;
-  padding:14px;
-  border-radius:14px;
-  color:#ffc078;
-  background:#ff8a0012;
-  border:1px solid #ff8a0030;
-  font-size:13px;
-  line-height:1.6;
-}
-
-
-/* ============================================================
-   SERVERS
-============================================================ */
-
-.server-grid{
-  display:grid;
-  grid-template-columns:
-    repeat(3,1fr);
-  gap:12px;
-}
-
-.server{
-  padding:16px;
-  border:1px solid #ffffff10;
-  border-radius:17px;
-  background:#0005;
-}
-
-.server-top{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.server-icon{
-  font-size:27px;
-}
-
-.server-name{
-  font-weight:900;
-}
-
-.server-time{
-  margin-top:12px;
-  color:#ff9b3d;
-  font-family:monospace;
-  font-size:14px;
-}
-
-.server-zone{
-  margin-top:5px;
-  color:#777;
-  font-size:11px;
-}
-
-
-/* ============================================================
-   HISTORY
-============================================================ */
-
-.history{
-  display:grid;
-  grid-template-columns:
-    repeat(2,1fr);
-  gap:10px;
-}
-
-.history-item{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  padding:14px;
-  border:1px solid #ffffff0d;
+  margin:25px auto;
+  max-width:900px;
+  padding:15px 18px;
+  border:1px solid rgba(255,176,0,.25);
+  background:rgba(255,176,0,.06);
   border-radius:15px;
-  background:#0005;
+  color:#ffd88b;
+  font-size:15px;
 }
 
-.history-ob{
-  color:#ff7600;
-  font-weight:1000;
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:25px;
+  margin:20px 0;
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.35),
+    inset 0 1px rgba(255,255,255,.05);
 }
 
-.history-date{
-  color:#bbb;
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:14px;
+}
+
+label{
+  display:block;
+  color:#d8d8de;
+  font-size:14px;
+  margin-bottom:7px;
+}
+
+input,
+select{
+  width:100%;
+  min-height:54px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  outline:none;
+  background:#0b0c11;
+  color:white;
+  padding:0 16px;
+  font-size:17px;
+  font-family:inherit;
+}
+
+input:focus,
+select:focus{
+  border-color:var(--orange);
+  box-shadow:0 0 0 3px rgba(255,122,0,.10);
+}
+
+button{
+  border:0;
+  border-radius:14px;
+  min-height:54px;
+  padding:0 24px;
+  color:#111;
+  font-family:inherit;
+  font-weight:700;
+  font-size:16px;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--orange),var(--orange2));
+  transition:.2s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 30px rgba(255,122,0,.22);
+}
+
+button.secondary{
+  color:white;
+  background:#15161c;
+  border:1px solid var(--border);
+}
+
+.api-box{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.api-url{
+  flex:1;
+  min-height:52px;
+  padding:15px;
+  border-radius:13px;
+  background:#05060a;
+  border:1px solid rgba(255,255,255,.08);
+  color:#ffbd67;
+  overflow:auto;
+  white-space:nowrap;
+  font-family:monospace;
+}
+
+.result-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+}
+
+.stat{
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:18px;
+  padding:20px;
+}
+
+.stat-title{
+  color:var(--muted);
   font-size:13px;
+  text-transform:uppercase;
 }
 
+.stat-value{
+  margin-top:8px;
+  font-size:25px;
+  font-weight:700;
+}
 
-/* ============================================================
-   FOOTER
-============================================================ */
+.orange{
+  color:var(--orange2);
+}
 
-.footer{
-  padding:25px 0 10px;
+.green{
+  color:var(--green);
+}
+
+.blue{
+  color:var(--blue);
+}
+
+.status{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  border-radius:999px;
+  padding:7px 12px;
+  font-size:13px;
+  font-weight:700;
+}
+
+.status.predicted{
+  color:#ffc66f;
+  background:rgba(255,176,0,.10);
+}
+
+.status.confirmed{
+  color:var(--green);
+  background:rgba(56,229,140,.10);
+}
+
+.status.unknown{
+  color:#ff9ba3;
+  background:rgba(255,79,94,.10);
+}
+
+.countdown{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-top:18px;
+}
+
+.time-box{
+  padding:18px 10px;
   text-align:center;
-  color:#666;
+  border-radius:17px;
+  background:#08090d;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.time-number{
+  font-size:32px;
+  font-weight:700;
+  color:var(--orange2);
+}
+
+.time-label{
+  color:var(--muted);
   font-size:12px;
 }
 
-.footer a{
-  color:#ff7800;
-  text-decoration:none;
+.table-wrap{
+  overflow:auto;
 }
 
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:800px;
+}
 
-/* ============================================================
-   RESPONSIVE
-============================================================ */
+th,
+td{
+  text-align:left;
+  padding:15px 12px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
 
-@media(max-width:750px){
+th{
+  color:#ffbd67;
+  font-size:13px;
+  text-transform:uppercase;
+}
 
-  .container{
-    padding:12px;
+td{
+  color:#ddd;
+}
+
+.code{
+  font-family:monospace;
+  color:#ffbd67;
+}
+
+.endpoint{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px;
+  background:#08090d;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;
+  margin:10px 0;
+}
+
+.endpoint button{
+  min-height:40px;
+  padding:0 14px;
+  font-size:13px;
+}
+
+.message{
+  margin-top:15px;
+  padding:14px;
+  border-radius:13px;
+  display:none;
+}
+
+.message.show{
+  display:block;
+}
+
+.message.error{
+  background:rgba(255,79,94,.09);
+  border:1px solid rgba(255,79,94,.20);
+  color:#ffadb5;
+}
+
+.message.ok{
+  background:rgba(56,229,140,.08);
+  border:1px solid rgba(56,229,140,.18);
+  color:#9df2c5;
+}
+
+.loader{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background:#030406;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  transition:.5s;
+}
+
+.loader.hide{
+  opacity:0;
+  pointer-events:none;
+}
+
+.loader-logo{
+  width:90px;
+  height:90px;
+  border-radius:24px;
+  animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+  50%{
+    transform:scale(1.06);
+    filter:drop-shadow(0 0 20px rgba(255,122,0,.5));
   }
+}
 
-  .input-row{
+.loader-text{
+  margin-top:20px;
+  color:#ffb35c;
+}
+
+.progress{
+  width:230px;
+  height:5px;
+  background:#16171d;
+  border-radius:99px;
+  margin-top:14px;
+  overflow:hidden;
+}
+
+.progress-bar{
+  width:0;
+  height:100%;
+  background:linear-gradient(90deg,var(--orange),var(--orange2));
+  transition:.1s;
+}
+
+footer{
+  padding:45px 0;
+  text-align:center;
+  color:#777b85;
+}
+
+@media(max-width:850px){
+  .form-grid{
     grid-template-columns:1fr;
   }
 
-  .server-grid{
-    grid-template-columns:
-      repeat(2,1fr);
+  .result-grid{
+    grid-template-columns:repeat(2,1fr);
   }
 
-  .history{
-    grid-template-columns:1fr;
+  .countdown{
+    grid-template-columns:repeat(2,1fr);
   }
-
 }
 
-@media(max-width:480px){
+@media(max-width:500px){
+  header{
+    padding-top:45px;
+  }
 
   .card{
-    padding:16px;
-    border-radius:20px;
+    padding:18px;
+    border-radius:19px;
   }
 
-  .server-grid{
-    grid-template-columns:1fr;
+  .result-grid{
+    grid-template-columns:1fr 1fr;
   }
 
-  .result-ob{
-    font-size:32px;
+  .stat-value{
+    font-size:21px;
   }
 
+  .api-box{
+    flex-direction:column;
+  }
+
+  .api-box button{
+    width:100%;
+  }
 }
-
 </style>
-
 </head>
-
 
 <body>
 
-
-<!-- ==========================================================
-     MENU
-=========================================================== -->
-
-<button
-  id="menuButton"
-  class="menu-button"
-  aria-label="Menu"
->
-  ☰
-</button>
-
-
-<div
-  id="menu"
-  class="menu"
->
-
-  <div
-    id="languageTitle"
-    class="menu-title"
+<div class="loader" id="loader">
+  <img
+    class="loader-logo"
+    src="https://cdn.imagetourls.com/uploads/tyImg/1ggIdgxtr.jpg"
+    alt="Free Fire"
   >
-    NGÔN NGỮ
+  <div class="loader-text" id="loaderText">
+    XIN CHÀO
   </div>
-
-  <button
-    class="lang"
-    onclick="setLanguage('vi')"
-  >
-    🇻🇳 Tiếng Việt
-  </button>
-
-  <button
-    class="lang"
-    onclick="setLanguage('en')"
-  >
-    🇺🇸 English
-  </button>
-
-  <button
-    class="lang"
-    onclick="setLanguage('id')"
-  >
-    🇮🇩 Indonesia
-  </button>
-
-  <button
-    class="lang"
-    onclick="setLanguage('zh')"
-  >
-    🇨🇳 中文
-  </button>
-
+  <div class="progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
 </div>
-
 
 <div class="container">
 
-
-<!-- ==========================================================
-     HEADER
-=========================================================== -->
-
-<header class="header">
-
+<header>
   <img
     class="logo"
     src="https://cdn.imagetourls.com/uploads/tyImg/1ggIdgxtr.jpg"
-    alt="FFVN.TGM"
+    alt="FF OB API"
   >
 
-  <h1
-    id="title"
-    class="title"
-  >
-    DỰ ĐOÁN <span>OB FREE FIRE</span> 🔥
+  <h1>
+    CÔNG CỤ DỰ ĐOÁN <span>OB FREE FIRE 🔥</span>
   </h1>
 
-  <p
-    id="subtitle"
-    class="subtitle"
-  >
-    Nhập OB để tra cứu hoặc dự đoán ngày cập nhật
+  <p class="subtitle">
+    API dự đoán lịch cập nhật OB dựa trên dữ liệu lịch sử được cấu hình.
   </p>
 
+  <div class="warning">
+    ⚠️ Công cụ này chỉ mang tính dự đoán dựa trên dữ liệu đã cấu hình.
+    Không phải API chính thức của Garena nếu không có nguồn chính thức xác nhận.
+  </div>
 </header>
-
-
-<!-- ==========================================================
-     INPUT
-=========================================================== -->
 
 <section class="card">
 
-  <div
-    id="inputTitle"
-    class="card-title"
-  >
-    🔎 NHẬP OB
+  <h2>🔎 DỰ ĐOÁN OB</h2>
+
+  <div class="form-grid">
+
+    <div>
+      <label>Nhập OB</label>
+      <input
+        id="obInput"
+        type="text"
+        placeholder="Ví dụ: OB55 hoặc 55"
+        autocomplete="off"
+      >
+    </div>
+
+    <div>
+      <label>Server</label>
+      <select id="serverSelect">
+        <option value="">🌍 Tất cả 15 server</option>
+      </select>
+    </div>
+
+    <div style="display:flex;align-items:end">
+      <button id="predictBtn">
+        DỰ ĐOÁN
+      </button>
+    </div>
+
   </div>
 
-  <div class="input-row">
+  <div class="message" id="message"></div>
 
-    <input
-      id="obInput"
-      class="input"
-      type="text"
-      inputmode="numeric"
-      autocomplete="off"
-      placeholder="Ví dụ: OB55 hoặc 55"
+  <div class="api-box">
+
+    <div
+      class="api-url"
+      id="apiUrl"
     >
+      Chưa có API URL
+    </div>
 
     <button
-      id="predictButton"
-      class="predict"
-      onclick="predictOB()"
+      class="secondary"
+      id="copyApi"
     >
-      DỰ ĐOÁN
+      SAO CHÉP API
     </button>
 
   </div>
 
-
-  <!-- API URL -->
-
-  <div class="api-box">
-
-    <span
-      id="apiLabel"
-      class="api-label"
-    >
-      API URL
-    </span>
-
-    <div
-      id="apiUrl"
-      class="api-url"
-    >
-      /api/ob?ob=xxxx
-    </div>
-
-  </div>
-
 </section>
-
-
-<!-- ==========================================================
-     RESULT
-=========================================================== -->
 
 <section
-  id="result"
-  class="card result"
+  class="card"
+  id="resultCard"
+  style="display:none"
 >
 
-  <span
-    id="resultBadge"
-    class="badge"
-  >
-    🔎 ĐANG XỬ LÝ
-  </span>
+  <h2>📊 KẾT QUẢ</h2>
 
-  <div
-    id="resultOB"
-    class="result-ob"
-  >
-    OB--
-  </div>
+  <div class="result-grid">
 
-  <div
-    id="resultDate"
-    class="result-date"
-  >
-    --
-  </div>
-
-  <div
-    id="resultInfo"
-    class="result-info"
-  >
-  </div>
-
-  <div
-    id="warning"
-    class="warning"
-  >
-  </div>
-
-</section>
-
-
-<!-- ==========================================================
-     SERVER
-=========================================================== -->
-
-<section class="card">
-
-  <div
-    id="serverTitle"
-    class="card-title"
-  >
-    🌍 THỜI GIAN CẬP NHẬT THEO SERVER
-  </div>
-
-  <div
-    id="serverGrid"
-    class="server-grid"
-  >
-    <div class="server">
-      Đang tải...
+    <div class="stat">
+      <div class="stat-title">
+        OB hiện tại
+      </div>
+      <div
+        class="stat-value orange"
+        id="currentOB"
+      >
+        -
+      </div>
     </div>
+
+    <div class="stat">
+      <div class="stat-title">
+        OB tiếp theo
+      </div>
+      <div
+        class="stat-value blue"
+        id="nextOB"
+      >
+        -
+      </div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-title">
+        Ngày dự kiến
+      </div>
+      <div
+        class="stat-value"
+        id="predictionDate"
+      >
+        -
+      </div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-title">
+        Thời gian
+      </div>
+      <div
+        class="stat-value"
+        id="predictionTime"
+      >
+        -
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:20px">
+    <span
+      class="status predicted"
+      id="statusBadge"
+    >
+      DỰ ĐOÁN
+    </span>
+  </div>
+
+  <div class="countdown">
+
+    <div class="time-box">
+      <div
+        class="time-number"
+        id="days"
+      >0</div>
+      <div class="time-label">
+        NGÀY
+      </div>
+    </div>
+
+    <div class="time-box">
+      <div
+        class="time-number"
+        id="hours"
+      >0</div>
+      <div class="time-label">
+        GIỜ
+      </div>
+    </div>
+
+    <div class="time-box">
+      <div
+        class="time-number"
+        id="minutes"
+      >0</div>
+      <div class="time-label">
+        PHÚT
+      </div>
+    </div>
+
+    <div class="time-box">
+      <div
+        class="time-number"
+        id="seconds"
+      >0</div>
+      <div class="time-label">
+        GIÂY
+      </div>
+    </div>
+
+  </div>
+
+  <div class="table-wrap" style="margin-top:25px">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Thông tin</th>
+          <th>Giá trị</th>
+        </tr>
+      </thead>
+
+      <tbody id="detailTable">
+      </tbody>
+    </table>
+
   </div>
 
 </section>
-
-
-<!-- ==========================================================
-     HISTORY
-=========================================================== -->
 
 <section class="card">
 
-  <div
-    id="historyTitle"
-    class="card-title"
-  >
-    📅 LỊCH SỬ OB
-  </div>
+  <h2>🌍 15 SERVER</h2>
 
-  <div
-    id="history"
-    class="history"
-  >
-    Đang tải...
+  <div class="table-wrap">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Server</th>
+          <th>Timezone</th>
+          <th>OB</th>
+          <th>OB tiếp theo</th>
+          <th>Dự kiến</th>
+          <th>Trạng thái</th>
+        </tr>
+      </thead>
+
+      <tbody id="serverTable">
+        <tr>
+          <td colspan="6">
+            Chưa có dữ liệu.
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+
   </div>
 
 </section>
 
+<section class="card">
 
-<footer class="footer">
+  <h2>📚 DOCUMENTATION API</h2>
 
-  FFVN.TGM • Free Fire OB Prediction API
+  <div class="endpoint">
+    <div>
+      <strong>OB Prediction</strong>
+      <div class="code">
+        GET /api/ob?ob=55
+      </div>
+    </div>
 
-  <br><br>
+    <button
+      class="secondary copy-endpoint"
+      data-path="/api/ob?ob=55"
+    >
+      COPY
+    </button>
+  </div>
 
-  <a
-    href="/api/ob"
-    target="_blank"
+  <div class="endpoint">
+    <div>
+      <strong>OB theo server</strong>
+      <div class="code">
+        GET /api/ob?ob=55&server=vn
+      </div>
+    </div>
+
+    <button
+      class="secondary copy-endpoint"
+      data-path="/api/ob?ob=55&server=vn"
+    >
+      COPY
+    </button>
+  </div>
+
+  <div class="endpoint">
+    <div>
+      <strong>Danh sách server</strong>
+      <div class="code">
+        GET /api/servers
+      </div>
+    </div>
+
+    <button
+      class="secondary copy-endpoint"
+      data-path="/api/servers"
+    >
+      COPY
+    </button>
+  </div>
+
+  <div class="endpoint">
+    <div>
+      <strong>Lịch sử OB</strong>
+      <div class="code">
+        GET /api/ob/history
+      </div>
+    </div>
+
+    <button
+      class="secondary copy-endpoint"
+      data-path="/api/ob/history"
+    >
+      COPY
+    </button>
+  </div>
+
+  <div class="endpoint">
+    <div>
+      <strong>Thống kê OB</strong>
+      <div class="code">
+        GET /api/ob/stats
+      </div>
+    </div>
+
+    <button
+      class="secondary copy-endpoint"
+      data-path="/api/ob/stats"
+    >
+      COPY
+    </button>
+  </div>
+
+  <div class="endpoint">
+    <div>
+      <strong>Health</strong>
+      <div class="code">
+        GET /api/health
+      </div>
+    </div>
+
+    <button
+      class="secondary copy-endpoint"
+      data-path="/api/health"
+    >
+      COPY
+    </button>
+  </div>
+
+</section>
+
+<section class="card">
+
+  <h2>⚙️ TRẠNG THÁI API</h2>
+
+  <button
+    class="secondary"
+    id="healthBtn"
   >
-    MỞ API JSON
-  </a>
+    KIỂM TRA API
+  </button>
 
+  <div
+    class="message"
+    id="healthResult"
+  ></div>
+
+</section>
+
+<footer>
+  FF OB Prediction API • Vercel Serverless
+  <br>
+  Dữ liệu dự đoán không phải dữ liệu chính thức nếu chưa được nguồn chính thức xác nhận.
 </footer>
-
 
 </div>
 
-
 <script>
+const $ = id => document.getElementById(id);
 
-
-// ============================================================
-// CONFIG
-// ============================================================
-
-const API_URL =
-  window.location.origin + "/api/ob";
-
-
-// ============================================================
-// LANGUAGE
-// ============================================================
-
-const LANG = {
-
-  vi:{
-    title:"DỰ ĐOÁN OB FREE FIRE 🔥",
-    subtitle:
-      "Nhập OB để tra cứu hoặc dự đoán ngày cập nhật",
-    input:
-      "🔎 NHẬP OB",
-    button:
-      "DỰ ĐOÁN",
-    api:
-      "API URL",
-    server:
-      "🌍 THỜI GIAN CẬP NHẬT THEO SERVER",
-    history:
-      "📅 LỊCH SỬ OB",
-    menu:
-      "NGÔN NGỮ",
-    placeholder:
-      "Ví dụ: OB55 hoặc 55",
-    known:
-      "✅ ĐÃ CÓ DỮ LIỆU",
-    prediction:
-      "🔮 DỰ ĐOÁN",
-    error:
-      "❌ LỖI API"
-  },
-
-  en:{
-    title:"FREE FIRE OB PREDICTION 🔥",
-    subtitle:
-      "Enter an OB version to check or predict the update date",
-    input:
-      "🔎 ENTER OB",
-    button:
-      "PREDICT",
-    api:
-      "API URL",
-    server:
-      "🌍 UPDATE TIME BY SERVER",
-    history:
-      "📅 OB HISTORY",
-    menu:
-      "LANGUAGE",
-    placeholder:
-      "Example: OB55 or 55",
-    known:
-      "✅ DATA AVAILABLE",
-    prediction:
-      "🔮 PREDICTION",
-    error:
-      "❌ API ERROR"
-  },
-
-  id:{
-    title:"PREDIKSI OB FREE FIRE 🔥",
-    subtitle:
-      "Masukkan OB untuk memeriksa atau memprediksi tanggal update",
-    input:
-      "🔎 MASUKKAN OB",
-    button:
-      "PREDIKSI",
-    api:
-      "URL API",
-    server:
-      "🌍 WAKTU UPDATE BERDASARKAN SERVER",
-    history:
-      "📅 RIWAYAT OB",
-    menu:
-      "BAHASA",
-    placeholder:
-      "Contoh: OB55 atau 55",
-    known:
-      "✅ DATA TERSEDIA",
-    prediction:
-      "🔮 PREDIKSI",
-    error:
-      "❌ API ERROR"
-  },
-
-  zh:{
-    title:"FREE FIRE OB 预测 🔥",
-    subtitle:
-      "输入 OB 版本以查询或预测更新时间",
-    input:
-      "🔎 输入 OB",
-    button:
-      "预测",
-    api:
-      "API 地址",
-    server:
-      "🌍 各服务器更新时间",
-    history:
-      "📅 OB 历史",
-    menu:
-      "语言",
-    placeholder:
-      "例如：OB55 或 55",
-    known:
-      "✅ 已有数据",
-    prediction:
-      "🔮 预测",
-    error:
-      "❌ API 错误"
-  }
-
-};
-
-
-let currentLanguage =
-  localStorage.getItem(
-    "ff_ob_language"
-  ) || "vi";
-
-
-function setLanguage(language){
-
-  if(!LANG[language]){
-    return;
-  }
-
-  currentLanguage =
-    language;
-
-  localStorage.setItem(
-    "ff_ob_language",
-    language
-  );
-
-  const t =
-    LANG[language];
-
-  document.documentElement
-    .lang = language;
-
-  document.getElementById(
-    "title"
-  ).textContent = t.title;
-
-  document.getElementById(
-    "subtitle"
-  ).textContent = t.subtitle;
-
-  document.getElementById(
-    "inputTitle"
-  ).textContent = t.input;
-
-  document.getElementById(
-    "predictButton"
-  ).textContent = t.button;
-
-  document.getElementById(
-    "apiLabel"
-  ).textContent = t.api;
-
-  document.getElementById(
-    "serverTitle"
-  ).textContent = t.server;
-
-  document.getElementById(
-    "historyTitle"
-  ).textContent = t.history;
-
-  document.getElementById(
-    "languageTitle"
-  ).textContent = t.menu;
-
-  document.getElementById(
-    "obInput"
-  ).placeholder =
-    t.placeholder;
-
-}
-
-
-// ============================================================
-// MENU
-// ============================================================
-
-document
-  .getElementById("menuButton")
-  .addEventListener(
-    "click",
-    () => {
-
-      document
-        .getElementById("menu")
-        .classList.toggle("open");
-
-    }
-  );
-
-
-// ============================================================
-// NORMALIZE OB
-// ============================================================
+let countdownTimer = null;
+let currentApiData = null;
 
 function normalizeOB(value){
-
-  const clean =
+  const raw =
     String(value || "")
       .trim()
-      .toUpperCase()
-      .replace(/^OB/,"")
-      .replace(/[^0-9]/g,"");
+      .toUpperCase();
 
-  if(!clean){
+  const match =
+    /^(?:OB)?(\d+)$/.exec(raw);
+
+  if(!match){
     return null;
   }
 
   const number =
-    Number(clean);
+    Number(match[1]);
 
-  if(
-    !Number.isInteger(number) ||
-    number < 1 ||
-    number > 999
-  ){
+  if(!Number.isSafeInteger(number) || number <= 0){
     return null;
   }
 
   return number;
 }
 
+function showMessage(text,type="error"){
+  const box = $("message");
 
-// ============================================================
-// UPDATE URL PREVIEW
-// ============================================================
+  box.textContent = text;
 
-function updateAPIUrl(){
-
-  const number =
-    normalizeOB(
-      document.getElementById(
-        "obInput"
-      ).value
-    );
-
-  const box =
-    document.getElementById(
-      "apiUrl"
-    );
-
-  if(!number){
-
-    box.textContent =
-      API_URL + "?ob=xxxx";
-
-    return;
-  }
-
-  box.textContent =
-    API_URL +
-    "?ob=" +
-    number;
-
+  box.className =
+    "message show " +
+    (type === "ok" ? "ok" : "error");
 }
 
+function clearMessage(){
+  $("message").className = "message";
+}
 
-// ============================================================
-// INPUT
-// ============================================================
-
-document
-  .getElementById("obInput")
-  .addEventListener(
-    "input",
-    updateAPIUrl
-  );
-
-document
-  .getElementById("obInput")
-  .addEventListener(
-    "keydown",
-    event => {
-
-      if(event.key === "Enter"){
-        predictOB();
-      }
-
-    }
-  );
-
-
-// ============================================================
-// PREDICT
-// ============================================================
-
-async function predictOB(){
-
-  const raw =
-    document.getElementById(
-      "obInput"
-    ).value;
-
+function getApiUrl(){
   const ob =
-    normalizeOB(raw);
+    normalizeOB($("obInput").value);
 
-  const result =
-    document.getElementById(
-      "result"
+  if(ob === null){
+    return null;
+  }
+
+  const server =
+    $("serverSelect").value;
+
+  const url =
+    new URL(
+      "/api/ob",
+      window.location.origin
     );
 
-  const t =
-    LANG[currentLanguage];
+  url.searchParams.set(
+    "ob",
+    ob
+  );
 
-  if(!ob){
-
-    alert(
-      currentLanguage === "vi"
-        ? "Vui lòng nhập OB hợp lệ."
-        : "Please enter a valid OB."
+  if(server){
+    url.searchParams.set(
+      "server",
+      server
     );
+  }
 
+  return url.toString();
+}
+
+function updateApiUrl(){
+  const url =
+    getApiUrl();
+
+  $("apiUrl").textContent =
+    url || "Chưa có API URL";
+}
+
+function renderStatus(status){
+  const badge =
+    $("statusBadge");
+
+  badge.className =
+    "status";
+
+  if(status === "CONFIRMED"){
+    badge.classList.add("confirmed");
+    badge.textContent =
+      "ĐÃ XÁC NHẬN";
+  }
+  else if(status === "PREDICTED"){
+    badge.classList.add("predicted");
+    badge.textContent =
+      "DỰ ĐOÁN";
+  }
+  else{
+    badge.classList.add("unknown");
+    badge.textContent =
+      "CHƯA CÓ DỮ LIỆU";
+  }
+}
+
+function renderCountdown(countdown){
+  clearInterval(countdownTimer);
+
+  if(!countdown){
+    $("days").textContent = "0";
+    $("hours").textContent = "0";
+    $("minutes").textContent = "0";
+    $("seconds").textContent = "0";
     return;
   }
 
-  result.classList.add("show");
+  let target =
+    Date.now() +
+    Number(countdown.total_seconds || 0) *
+    1000;
 
-  document.getElementById(
-    "resultBadge"
-  ).textContent =
-    "⏳ " +
-    (
-      currentLanguage === "vi"
-        ? "ĐANG XỬ LÝ"
-        : "LOADING"
+  function tick(){
+    let diff =
+      target - Date.now();
+
+    if(diff <= 0){
+      $("days").textContent = "0";
+      $("hours").textContent = "0";
+      $("minutes").textContent = "0";
+      $("seconds").textContent = "0";
+      return;
+    }
+
+    const total =
+      Math.floor(diff / 1000);
+
+    $("days").textContent =
+      Math.floor(total / 86400);
+
+    $("hours").textContent =
+      Math.floor(
+        (total % 86400) / 3600
+      );
+
+    $("minutes").textContent =
+      Math.floor(
+        (total % 3600) / 60
+      );
+
+    $("seconds").textContent =
+      total % 60;
+  }
+
+  tick();
+
+  countdownTimer =
+    setInterval(
+      tick,
+      1000
+    );
+}
+
+function renderResult(data){
+  const result =
+    $("serverSelect").value
+      ? data.servers[0]
+      : data.servers.find(
+          item =>
+            item.status === "CONFIRMED" ||
+            item.status === "PREDICTED"
+        );
+
+  if(!result){
+    $("resultCard").style.display =
+      "none";
+    return;
+  }
+
+  $("resultCard").style.display =
+    "block";
+
+  $("currentOB").textContent =
+    "OB" + result.current_ob;
+
+  $("nextOB").textContent =
+    "OB" + result.next_ob;
+
+  if(result.prediction){
+    $("predictionDate").textContent =
+      result.prediction.date_display;
+
+    $("predictionTime").textContent =
+      result.prediction.time;
+  }
+  else{
+    $("predictionDate").textContent =
+      "CHƯA CÓ";
+
+    $("predictionTime").textContent =
+      "CHƯA CÓ";
+  }
+
+  renderStatus(
+    result.status
+  );
+
+  renderCountdown(
+    result.countdown
+  );
+
+  const prediction =
+    result.prediction;
+
+  $("detailTable").innerHTML = `
+    <tr>
+      <td>Server</td>
+      <td>${escapeHTML(result.name)}</td>
+    </tr>
+
+    <tr>
+      <td>Timezone</td>
+      <td class="code">${escapeHTML(result.timezone)}</td>
+    </tr>
+
+    <tr>
+      <td>Datetime</td>
+      <td class="code">
+        ${
+          prediction
+            ? escapeHTML(prediction.datetime)
+            : "CHƯA CÓ DỮ LIỆU"
+        }
+      </td>
+    </tr>
+
+    <tr>
+      <td>Unix timestamp</td>
+      <td class="code">
+        ${
+          prediction
+            ? prediction.unix_timestamp
+            : "UNKNOWN"
+        }
+      </td>
+    </tr>
+
+    <tr>
+      <td>Chu kỳ trung bình</td>
+      <td>
+        ${
+          result.historical &&
+          result.historical.average_cycle_days !== null
+            ? result.historical.average_cycle_days +
+              " ngày/OB"
+            : "CHƯA CÓ DỮ LIỆU"
+        }
+      </td>
+    </tr>
+
+    <tr>
+      <td>Khoảng OB trước → hiện tại</td>
+      <td>
+        ${
+          result.historical &&
+          result.historical.previous_to_current_days !== null
+            ? result.historical.previous_to_current_days +
+              " ngày"
+            : "CHƯA CÓ DỮ LIỆU"
+        }
+      </td>
+    </tr>
+
+    <tr>
+      <td>Nguồn</td>
+      <td>${escapeHTML(result.source || "configured-data")}</td>
+    </tr>
+
+    <tr>
+      <td>Ghi chú</td>
+      <td>${escapeHTML(result.notes || "")}</td>
+    </tr>
+  `;
+}
+
+function renderServers(servers){
+  $("serverTable").innerHTML =
+    servers.map(server => {
+
+      let date = "CHƯA CÓ";
+
+      if(server.prediction){
+        date =
+          server.prediction.date_display +
+          "<br>" +
+          server.prediction.time;
+      }
+
+      let statusClass =
+        server.status === "CONFIRMED"
+          ? "confirmed"
+          : server.status === "PREDICTED"
+            ? "predicted"
+            : "unknown";
+
+      let statusText =
+        server.status === "CONFIRMED"
+          ? "ĐÃ XÁC NHẬN"
+          : server.status === "PREDICTED"
+            ? "DỰ ĐOÁN"
+            : "CHƯA CÓ DỮ LIỆU";
+
+      return `
+        <tr>
+          <td>
+            <strong>
+              ${escapeHTML(server.name)}
+            </strong>
+            <br>
+            <span class="code">
+              ${escapeHTML(server.code)}
+            </span>
+          </td>
+
+          <td class="code">
+            ${escapeHTML(server.timezone)}
+          </td>
+
+          <td>
+            OB${server.current_ob}
+          </td>
+
+          <td>
+            OB${server.next_ob}
+          </td>
+
+          <td>
+            ${date}
+          </td>
+
+          <td>
+            <span class="status ${statusClass}">
+              ${statusText}
+            </span>
+          </td>
+        </tr>
+      `;
+    }).join("");
+}
+
+function escapeHTML(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+async function predict(){
+  clearMessage();
+
+  const ob =
+    normalizeOB(
+      $("obInput").value
     );
 
-  document.getElementById(
-    "resultOB"
-  ).textContent =
+  if(ob === null){
+    showMessage(
+      "OB không hợp lệ. Hãy nhập ví dụ OB55 hoặc 55."
+    );
+    return;
+  }
+
+  $("obInput").value =
     "OB" + ob;
 
-  document.getElementById(
-    "resultDate"
-  ).textContent =
-    "...";
+  updateApiUrl();
 
-  document.getElementById(
-    "resultInfo"
-  ).textContent =
-    "";
+  const url =
+    getApiUrl();
 
-  document.getElementById(
-    "warning"
-  ).textContent =
-    "";
-
-  updateAPIUrl();
+  $("predictBtn").disabled = true;
+  $("predictBtn").textContent =
+    "ĐANG XỬ LÝ...";
 
   try{
 
     const response =
-      await fetch(
-        API_URL +
-        "?ob=" +
-        encodeURIComponent(ob),
-        {
-          method:"GET",
-          cache:"no-store"
+      await fetch(url,{
+        method:"GET",
+        headers:{
+          "Accept":
+            "application/json"
         }
-      );
-
-    if(!response.ok){
-
-      throw new Error(
-        "HTTP " +
-        response.status
-      );
-
-    }
+      });
 
     const data =
       await response.json();
 
-    if(!data.success){
+    if(!response.ok || !data.success){
 
-      throw new Error(
-        data.error ||
-        "API Error"
+      showMessage(
+        data.message ||
+        "Không thể lấy dữ liệu."
       );
 
+      $("resultCard").style.display =
+        "none";
+
+      return;
     }
 
+    currentApiData = data;
 
-    // ========================================================
-    // BADGE
-    // ========================================================
-
-    if(data.type === "confirmed"){
-
-      document.getElementById(
-        "resultBadge"
-      ).textContent =
-        t.known;
-
-    }else{
-
-      document.getElementById(
-        "resultBadge"
-      ).textContent =
-        t.prediction;
-
-    }
-
-
-    // ========================================================
-    // RESULT
-    // ========================================================
-
-    document.getElementById(
-      "resultOB"
-    ).textContent =
-      data.ob;
-
-    document.getElementById(
-      "resultDate"
-    ).textContent =
-      data.displayDate;
-
-
-    // ========================================================
-    // INFO
-    // ========================================================
-
-    let info = "";
-
-    if(data.confirmed){
-
-      info +=
-        "✓ " +
-        (
-          currentLanguage === "vi"
-            ? "Dữ liệu đã được xác nhận trong cơ sở dữ liệu."
-            : "Confirmed data in database."
-        );
-
-    }else{
-
-      info +=
-        "🔮 " +
-        (
-          currentLanguage === "vi"
-            ? "Ngày được tính từ dữ liệu lịch sử."
-            : "Date calculated from historical data."
-        );
-
-    }
-
-    if(data.averageIntervalDays){
-
-      info +=
-        "<br>📊 " +
-        (
-          currentLanguage === "vi"
-            ? "Khoảng trung bình: "
-            : "Average interval: "
-        ) +
-        data.averageIntervalDays +
-        " " +
-        (
-          currentLanguage === "vi"
-            ? "ngày"
-            : "days"
-        );
-
-    }
-
-    document.getElementById(
-      "resultInfo"
-    ).innerHTML =
-      info;
-
-
-    // ========================================================
-    // WARNING
-    // ========================================================
-
-    document.getElementById(
-      "warning"
-    ).textContent =
-      data.confirmed
-        ? (
-            currentLanguage === "vi"
-              ? "Nguồn dữ liệu: " +
-                (data.source || "Database")
-              : "Data source: " +
-                (data.source || "Database")
-          )
-        : (
-            currentLanguage === "vi"
-              ? "⚠️ Đây là dự đoán thống kê, không phải xác nhận chính thức của Garena. Không thể đảm bảo 100% cho ngày OB tương lai."
-              : "⚠️ This is a statistical prediction, not an official Garena confirmation."
-          );
-
-
-    // ========================================================
-    // SERVERS
-    // ========================================================
+    renderResult(data);
 
     renderServers(
       data.servers || []
     );
 
-
-  }catch(error){
-
-    document.getElementById(
-      "resultBadge"
-    ).textContent =
-      t.error;
-
-    document.getElementById(
-      "resultDate"
-    ).textContent =
-      "--";
-
-    document.getElementById(
-      "resultInfo"
-    ).textContent =
-      error.message;
-
-    document.getElementById(
-      "warning"
-    ).textContent =
-      currentLanguage === "vi"
-        ? "Không thể kết nối API. Hãy kiểm tra lại URL /api/ob."
-        : "Could not connect to API.";
-
-  }
-
-}
-
-
-// ============================================================
-// RENDER SERVER
-// ============================================================
-
-function renderServers(servers){
-
-  const grid =
-    document.getElementById(
-      "serverGrid"
+    showMessage(
+      "Đã nhận dữ liệu API thành công.",
+      "ok"
     );
 
-  if(!servers.length){
-
-    grid.innerHTML =
-      "<div class='server'>Chưa có dữ liệu server.</div>";
-
-    return;
   }
+  catch(error){
 
-  grid.innerHTML =
-    servers
-      .map(server => {
+    showMessage(
+      "Không thể kết nối API. Hãy kiểm tra Vercel Deployment."
+    );
 
-        return `
+  }
+  finally{
 
-          <div class="server">
+    $("predictBtn").disabled =
+      false;
 
-            <div class="server-top">
+    $("predictBtn").textContent =
+      "DỰ ĐOÁN";
 
-              <span class="server-icon">
-                ${escapeHTML(server.icon)}
-              </span>
-
-              <span class="server-name">
-                ${escapeHTML(server.name)}
-              </span>
-
-            </div>
-
-            <div class="server-time">
-              ${escapeHTML(
-                server.localTime ||
-                "--"
-              )}
-            </div>
-
-            <div class="server-zone">
-              ${escapeHTML(
-                server.offset ||
-                ""
-              )}
-            </div>
-
-          </div>
-
-        `;
-
-      })
-      .join("");
-
+  }
 }
 
-
-// ============================================================
-// HISTORY
-// ============================================================
-
-async function loadHistory(){
-
-  const box =
-    document.getElementById(
-      "history"
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(
+      text
     );
+
+    return true;
+  }
+  catch{
+    const area =
+      document.createElement("textarea");
+
+    area.value = text;
+
+    document.body.appendChild(area);
+
+    area.select();
+
+    document.execCommand("copy");
+
+    area.remove();
+
+    return true;
+  }
+}
+
+async function loadServers(){
 
   try{
 
     const response =
       await fetch(
-        API_URL +
-        "?all=true",
-        {
-          cache:"no-store"
-        }
+        "/api/servers"
       );
-
-    if(!response.ok){
-      throw new Error("API");
-    }
 
     const data =
       await response.json();
 
-    if(
-      !data.success ||
-      !Array.isArray(data.data)
-    ){
-
-      throw new Error("DATA");
-
+    if(!data.success){
+      return;
     }
 
-    const sorted =
-      [...data.data]
-        .sort(
-          (a,b) =>
-            Number(
-              String(b.ob)
-                .replace("OB","")
-            ) -
-            Number(
-              String(a.ob)
-                .replace("OB","")
-            )
-        );
+    const select =
+      $("serverSelect");
 
-    box.innerHTML =
-      sorted
-        .map(item => {
+    for(const server of data.servers){
 
-          return `
+      const option =
+        document.createElement("option");
 
-            <div class="history-item">
+      option.value =
+        server.code;
 
-              <span class="history-ob">
-                ${escapeHTML(item.ob)}
-              </span>
+      option.textContent =
+        `${server.name} (${server.code})`;
 
-              <span class="history-date">
-                ${escapeHTML(
-                  item.displayDate
-                )}
-              </span>
-
-            </div>
-
-          `;
-
-        })
-        .join("");
-
-  }catch(error){
-
-    box.innerHTML =
-      `
-      <div class="history-item">
-        ❌ Không thể tải dữ liệu.
-      </div>
-      `;
+      select.appendChild(
+        option
+      );
+    }
 
   }
-
+  catch(error){
+    console.error(error);
+  }
 }
 
+$("predictBtn")
+  .addEventListener(
+    "click",
+    predict
+  );
 
-// ============================================================
-// ESCAPE HTML
-// ============================================================
+$("obInput")
+  .addEventListener(
+    "input",
+    updateApiUrl
+  );
 
-function escapeHTML(value){
+$("serverSelect")
+  .addEventListener(
+    "change",
+    updateApiUrl
+  );
 
-  return String(value ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+$("obInput")
+  .addEventListener(
+    "keydown",
+    event => {
+      if(event.key === "Enter"){
+        predict();
+      }
+    }
+  );
 
-}
+$("copyApi")
+  .addEventListener(
+    "click",
+    async () => {
 
+      const url =
+        getApiUrl();
 
-// ============================================================
-// INIT
-// ============================================================
+      if(!url){
+        showMessage(
+          "Hãy nhập OB trước."
+        );
+        return;
+      }
 
-setLanguage(
-  currentLanguage
-);
+      await copyText(url);
 
-loadHistory();
+      showMessage(
+        "Đã sao chép URL API.",
+        "ok"
+      );
+    }
+  );
 
-updateAPIUrl();
+document
+  .querySelectorAll(
+    ".copy-endpoint"
+  )
+  .forEach(button => {
 
+    button.addEventListener(
+      "click",
+      async () => {
+
+        const url =
+          window.location.origin +
+          button.dataset.path;
+
+        await copyText(url);
+
+        button.textContent =
+          "COPIED";
+
+        setTimeout(() => {
+          button.textContent =
+            "COPY";
+        },1200);
+      }
+    );
+
+  });
+
+$("healthBtn")
+  .addEventListener(
+    "click",
+    async () => {
+
+      const box =
+        $("healthResult");
+
+      try{
+
+        const response =
+          await fetch(
+            "/api/health"
+          );
+
+        const data =
+          await response.json();
+
+        box.className =
+          "message show " +
+          (data.success
+            ? "ok"
+            : "error");
+
+        box.textContent =
+          data.success
+            ? "🟢 API đang ONLINE"
+            : "🔴 API OFFLINE";
+
+      }
+      catch{
+
+        box.className =
+          "message show error";
+
+        box.textContent =
+          "🔴 Không thể kết nối API.";
+
+      }
+
+    }
+  );
+
+let progress = 0;
+
+const progressTimer =
+  setInterval(() => {
+
+    progress += 4;
+
+    if(progress >= 100){
+
+      progress = 100;
+
+      clearInterval(
+        progressTimer
+      );
+
+      setTimeout(() => {
+
+        $("loader")
+          .classList
+          .add("hide");
+
+      },250);
+    }
+
+    $("progressBar")
+      .style.width =
+      progress + "%";
+
+    $("loaderText")
+      .textContent =
+      progress < 100
+        ? "ĐANG KHỞI ĐỘNG " +
+          progress +
+          "%"
+        : "SẴN SÀNG";
+
+  },35);
+
+loadServers();
+
+updateApiUrl();
 </script>
 
 </body>
-
-    </html>
+  </html>
