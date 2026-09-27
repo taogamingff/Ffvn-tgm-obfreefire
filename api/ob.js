@@ -1,672 +1,763 @@
-// ============================================================
-// FFVN.TGM - FREE FIRE OB API
-// Vercel Serverless Function
-//
-// GET:
-// /api/ob
-// /api/ob?ob=55
-// /api/ob?ob=OB55
-// /api/ob?ob=100
-// /api/ob?servers=true
-// /api/ob?all=true
-//
-// Không phải API chính thức của Garena.
-// ============================================================
+const fs = require("fs");
+const path = require("path");
 
-const OB_DATABASE = [
-  {
-    ob: 49,
-    date: "2025-05-21",
-    confirmed: true,
-    source: "Garena Free Fire"
-  },
-  {
-    ob: 50,
-    date: "2025-07-30",
-    confirmed: true,
-    source: "Garena Free Fire"
-  },
-  {
-    ob: 51,
-    date: "2025-10-29",
-    confirmed: true,
-    source: "Garena Free Fire"
-  },
-  {
-    ob: 52,
-    date: "2026-01-14",
-    confirmed: true,
-    source: "Garena Free Fire"
-  },
-  {
-    ob: 53,
-    date: "2026-04-08",
-    confirmed: true,
-    source: "Garena Free Fire"
-  },
-  {
-    ob: 54,
-    date: "2026-06-24",
-    confirmed: true,
-    source: "Garena Free Fire"
-  },
-  {
-    ob: 55,
-    date: "2026-09-10",
-    confirmed: true,
-    source: "Garena Free Fire"
-  }
+const DATA_PATH = path.join(process.cwd(), "data", "ob.json");
 
-  // ==========================================================
-  // CHỈ thêm OB56 / OB57 vào đây khi bạn có nguồn xác nhận.
-  //
-  // Ví dụ:
-  //
-  // {
-  //   ob: 56,
-  //   date: "2026-12-16",
-  //   confirmed: true,
-  //   source: "Nguồn xác nhận"
-  // }
-  //
-  // ==========================================================
-];
-
-
-// ============================================================
-// SERVER DATABASE
-// ============================================================
-
-const SERVERS = [
-  {
-    id: "vn",
-    icon: "🇻🇳",
-    name: "Việt Nam",
-    timezone: "Asia/Ho_Chi_Minh",
-    offset: "UTC+07:00"
-  },
-  {
-    id: "id",
-    icon: "🇮🇩",
-    name: "Indonesia",
-    timezone: "Asia/Jakarta",
-    offset: "UTC+07:00"
-  },
-  {
-    id: "th",
-    icon: "🇹🇭",
-    name: "Thailand",
-    timezone: "Asia/Bangkok",
-    offset: "UTC+07:00"
-  },
-  {
-    id: "sg",
-    icon: "🇸🇬",
-    name: "Singapore",
-    timezone: "Asia/Singapore",
-    offset: "UTC+08:00"
-  },
-  {
-    id: "my",
-    icon: "🇲🇾",
-    name: "Malaysia",
-    timezone: "Asia/Kuala_Lumpur",
-    offset: "UTC+08:00"
-  },
-  {
-    id: "ph",
-    icon: "🇵🇭",
-    name: "Philippines",
-    timezone: "Asia/Manila",
-    offset: "UTC+08:00"
-  },
-  {
-    id: "in",
-    icon: "🇮🇳",
-    name: "India",
-    timezone: "Asia/Kolkata",
-    offset: "UTC+05:30"
-  },
-  {
-    id: "br",
-    icon: "🇧🇷",
-    name: "Brazil",
-    timezone: "America/Sao_Paulo",
-    offset: "UTC-03:00"
-  },
-  {
-    id: "us",
-    icon: "🇺🇸",
-    name: "North America",
-    timezone: "America/New_York",
-    offset: "UTC-05:00 / UTC-04:00"
-  },
-  {
-    id: "eu",
-    icon: "🇪🇺",
-    name: "Europe",
-    timezone: "Europe/Berlin",
-    offset: "UTC+01:00 / UTC+02:00"
-  },
-  {
-    id: "me",
-    icon: "🌍",
-    name: "Middle East",
-    timezone: "Asia/Riyadh",
-    offset: "UTC+03:00"
-  },
-  {
-    id: "pk",
-    icon: "🇵🇰",
-    name: "Pakistan",
-    timezone: "Asia/Karachi",
-    offset: "UTC+05:00"
-  ],
-};
-
-
-// ============================================================
-// FORMAT DATE
-// ============================================================
-
-function formatDate(dateString, locale = "vi-VN") {
-
-  const date = new Date(dateString + "T00:00:00Z");
-
-  if (Number.isNaN(date.getTime())) {
-    return null;
-  }
-
-  return new Intl.DateTimeFormat(locale, {
-    timeZone: "UTC",
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    weekday: "long"
-  }).format(date);
+function loadData() {
+  return JSON.parse(fs.readFileSync(DATA_PATH, "utf8"));
 }
 
-
-// ============================================================
-// NORMALIZE OB
-// ============================================================
+function headers() {
+  return {
+    "Content-Type": "application/json; charset=utf-8",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Cache-Control": "public, s-maxage=30, stale-while-revalidate=60"
+  };
+}
 
 function normalizeOB(value) {
-
-  if (
-    value === undefined ||
-    value === null ||
-    String(value).trim() === ""
-  ) {
+  if (value === undefined || value === null) {
     return null;
   }
 
-  const cleaned = String(value)
-    .trim()
-    .toUpperCase()
-    .replace(/^OB/, "")
-    .replace(/[^0-9]/g, "");
+  const raw = String(value).trim().toUpperCase();
 
-  if (!cleaned) {
+  const match = /^(?:OB)?(\d+)$/.exec(raw);
+
+  if (!match) {
     return null;
   }
 
-  const number = Number(cleaned);
+  const number = Number(match[1]);
 
-  if (!Number.isInteger(number)) {
-    return null;
-  }
-
-  if (number < 1 || number > 999) {
+  if (!Number.isSafeInteger(number) || number <= 0) {
     return null;
   }
 
   return number;
 }
 
-
-// ============================================================
-// DATE DIFFERENCE
-// ============================================================
-
-function daysBetween(a, b) {
-
-  const first =
-    new Date(a + "T00:00:00Z").getTime();
-
-  const second =
-    new Date(b + "T00:00:00Z").getTime();
-
-  return Math.round(
-    (second - first) /
-    86400000
-  );
-}
-
-
-// ============================================================
-// ADD DAYS
-// ============================================================
-
-function addDays(dateString, days) {
-
-  const date =
-    new Date(dateString + "T00:00:00Z");
-
-  date.setUTCDate(
-    date.getUTCDate() + days
-  );
-
-  return date
-    .toISOString()
-    .slice(0, 10);
-}
-
-
-// ============================================================
-// CALCULATE AVERAGE
-// ============================================================
-
-function calculateAverageInterval(data) {
-
-  if (data.length < 2) {
+function normalizeServer(value) {
+  if (value === undefined || value === null) {
     return null;
   }
 
-  const sorted =
-    [...data].sort(
-      (a, b) => a.ob - b.ob
+  return String(value).trim().toLowerCase();
+}
+
+function validDateParts(date, time) {
+  if (!date || !time) return false;
+
+  return (
+    /^\d{4}-\d{2}-\d{2}$/.test(date) &&
+    /^\d{2}:\d{2}(?::\d{2})?$/.test(time)
+  );
+}
+
+function getOffsetMilliseconds(timestamp, timezone) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: timezone,
+    timeZoneName: "longOffset",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23"
+  }).formatToParts(new Date(timestamp));
+
+  const values = {};
+
+  for (const part of parts) {
+    values[part.type] = part.value;
+  }
+
+  const localTimestamp = Date.UTC(
+    Number(values.year),
+    Number(values.month) - 1,
+    Number(values.day),
+    Number(values.hour),
+    Number(values.minute),
+    Number(values.second)
+  );
+
+  return localTimestamp - timestamp;
+}
+
+function toTimestamp(date, time, timezone) {
+  if (!validDateParts(date, time)) {
+    return null;
+  }
+
+  const dateMatch =
+    /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
+
+  const timeMatch =
+    /^(\d{2}):(\d{2})(?::(\d{2}))?$/.exec(time);
+
+  if (!dateMatch || !timeMatch) {
+    return null;
+  }
+
+  const year = Number(dateMatch[1]);
+  const month = Number(dateMatch[2]);
+  const day = Number(dateMatch[3]);
+
+  const hour = Number(timeMatch[1]);
+  const minute = Number(timeMatch[2]);
+  const second = Number(timeMatch[3] || 0);
+
+  let timestamp = Date.UTC(
+    year,
+    month - 1,
+    day,
+    hour,
+    minute,
+    second
+  );
+
+  for (let i = 0; i < 4; i++) {
+    const offset = getOffsetMilliseconds(
+      timestamp,
+      timezone
     );
+
+    const desiredLocal = Date.UTC(
+      year,
+      month - 1,
+      day,
+      hour,
+      minute,
+      second
+    );
+
+    timestamp = desiredLocal - offset;
+  }
+
+  return timestamp;
+}
+
+function isoWithTimezone(timestamp, timezone) {
+  if (timestamp === null) {
+    return null;
+  }
+
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: timezone,
+    timeZoneName: "longOffset",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23"
+  }).formatToParts(new Date(timestamp));
+
+  const values = {};
+
+  for (const part of parts) {
+    values[part.type] = part.value;
+  }
+
+  let offset = values.timeZoneName || "GMT+00:00";
+
+  if (offset === "GMT") {
+    offset = "GMT+00:00";
+  }
+
+  offset = offset.replace("GMT", "");
+
+  if (/^[+-]\d$/.test(offset)) {
+    offset += ":00";
+  }
+
+  if (/^[+-]\d{2}$/.test(offset)) {
+    offset += ":00";
+  }
+
+  return (
+    `${values.year}-${values.month}-${values.day}` +
+    `T${values.hour}:${values.minute}:${values.second}` +
+    offset
+  );
+}
+
+function formatLocal(timestamp, timezone) {
+  if (timestamp === null) {
+    return null;
+  }
+
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: timezone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23"
+  }).formatToParts(new Date(timestamp));
+
+  const values = {};
+
+  for (const part of parts) {
+    values[part.type] = part.value;
+  }
+
+  return {
+    date: `${values.year}-${values.month}-${values.day}`,
+    date_display:
+      `${values.day}/${values.month}/${values.year}`,
+    time:
+      `${values.hour}:${values.minute}:${values.second}`
+  };
+}
+
+function countdown(targetTimestamp) {
+  if (targetTimestamp === null) {
+    return null;
+  }
+
+  const diff = targetTimestamp - Date.now();
+
+  if (diff <= 0) {
+    return {
+      total_seconds: 0,
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      expired: true,
+      label: "ĐÃ ĐẾN THỜI GIAN DỰ KIẾN"
+    };
+  }
+
+  const totalSeconds = Math.floor(diff / 1000);
+
+  const days = Math.floor(totalSeconds / 86400);
+
+  const hours = Math.floor(
+    (totalSeconds % 86400) / 3600
+  );
+
+  const minutes = Math.floor(
+    (totalSeconds % 3600) / 60
+  );
+
+  const seconds = totalSeconds % 60;
+
+  return {
+    total_seconds: totalSeconds,
+    days,
+    hours,
+    minutes,
+    seconds,
+    expired: false,
+    label:
+      `${days} ngày ${hours} giờ ` +
+      `${minutes} phút ${seconds} giây`
+  };
+}
+
+function findRecord(records, ob) {
+  return records.find(
+    record => Number(record.ob) === Number(ob)
+  ) || null;
+}
+
+function validRecordTimestamp(record, timezone) {
+  if (!record) return null;
+
+  return toTimestamp(
+    record.release_date,
+    record.release_time,
+    timezone
+  );
+}
+
+function getIntervals(records, timezone) {
+  const sorted = records
+    .filter(record =>
+      validRecordTimestamp(record, timezone) !== null
+    )
+    .sort((a, b) => Number(a.ob) - Number(b.ob));
 
   const intervals = [];
 
   for (let i = 1; i < sorted.length; i++) {
+    const previous = sorted[i - 1];
+    const current = sorted[i];
 
-    const diff =
-      daysBetween(
-        sorted[i - 1].date,
-        sorted[i].date
-      );
+    const previousTime =
+      validRecordTimestamp(previous, timezone);
 
-    if (diff > 0) {
-      intervals.push(diff);
+    const currentTime =
+      validRecordTimestamp(current, timezone);
+
+    const obDifference =
+      Number(current.ob) - Number(previous.ob);
+
+    if (
+      previousTime !== null &&
+      currentTime !== null &&
+      obDifference > 0 &&
+      currentTime > previousTime
+    ) {
+      const days =
+        (currentTime - previousTime) / 86400000;
+
+      intervals.push({
+        from_ob: Number(previous.ob),
+        to_ob: Number(current.ob),
+        days,
+        days_per_ob: days / obDifference
+      });
     }
   }
 
-  if (!intervals.length) {
-    return null;
-  }
+  return intervals;
+}
 
-  const total =
-    intervals.reduce(
-      (sum, value) => sum + value,
-      0
-    );
+function average(values) {
+  if (!values.length) return null;
 
-  return Math.round(
-    total / intervals.length
+  return (
+    values.reduce((sum, value) => sum + value, 0) /
+    values.length
   );
 }
 
+function makeServerPrediction(server, requestedOB) {
+  const records = Array.isArray(server.records)
+    ? server.records
+    : [];
 
-// ============================================================
-// PREDICT
-// ============================================================
+  const currentRecord =
+    findRecord(records, requestedOB);
 
-function predictOB(obNumber) {
-
-  const sorted =
-    [...OB_DATABASE]
-      .filter(item => item.ob < obNumber)
-      .sort((a, b) => a.ob - b.ob);
-
-  if (sorted.length < 2) {
-
+  if (!currentRecord) {
     return {
-      success: false,
-      error:
-        "Không đủ dữ liệu lịch sử để dự đoán OB này."
+      code: server.code,
+      name: server.name,
+      timezone: server.timezone,
+      current_ob: requestedOB,
+      next_ob: requestedOB + 1,
+      status: "UNKNOWN",
+      status_label: "CHƯA CÓ DỮ LIỆU",
+      prediction: null,
+      countdown: null,
+      interval: null,
+      historical: {
+        previous_ob: null,
+        previous_to_current_days: null,
+        average_cycle_days: null,
+        samples: 0
+      },
+      source: "configured historical data",
+      notes: "Không tìm thấy OB này trong dữ liệu cấu hình."
     };
-
   }
 
-  const last =
-    sorted[sorted.length - 1];
+  const nextOB = requestedOB + 1;
 
-  const average =
-    calculateAverageInterval(sorted);
+  const currentTimestamp =
+    validRecordTimestamp(
+      currentRecord,
+      server.timezone
+    );
 
-  if (!average) {
-
+  if (currentTimestamp === null) {
     return {
-      success: false,
-      error:
-        "Không thể tính khoảng thời gian OB."
+      code: server.code,
+      name: server.name,
+      timezone: server.timezone,
+      current_ob: requestedOB,
+      next_ob: nextOB,
+      status: "UNKNOWN",
+      status_label: "CHƯA CÓ DỮ LIỆU",
+      prediction: null,
+      countdown: null,
+      interval: null,
+      historical: {
+        previous_ob: currentRecord.previous_ob ?? null,
+        previous_to_current_days: null,
+        average_cycle_days: null,
+        samples: 0
+      },
+      source: currentRecord.source || "configured-data",
+      notes:
+        "OB hiện tại chưa có ngày/giờ hợp lệ."
     };
-
   }
 
-  const step =
-    obNumber - last.ob;
+  const nextRecord =
+    findRecord(records, nextOB);
 
-  const predictedDays =
-    Math.round(
-      average * step
+  const nextTimestamp =
+    validRecordTimestamp(
+      nextRecord,
+      server.timezone
     );
 
-  const predictedDate =
-    addDays(
-      last.date,
-      predictedDays
+  const intervals =
+    getIntervals(records, server.timezone);
+
+  const averageCycle =
+    average(
+      intervals.map(item => item.days_per_ob)
     );
+
+  let previousRecord = null;
+
+  for (const record of records) {
+    if (
+      Number(record.ob) < requestedOB &&
+      validRecordTimestamp(record, server.timezone) !== null
+    ) {
+      if (
+        !previousRecord ||
+        Number(record.ob) >
+          Number(previousRecord.ob)
+      ) {
+        previousRecord = record;
+      }
+    }
+  }
+
+  let previousToCurrentDays = null;
+
+  if (previousRecord) {
+    const previousTimestamp =
+      validRecordTimestamp(
+        previousRecord,
+        server.timezone
+      );
+
+    if (previousTimestamp !== null) {
+      previousToCurrentDays =
+        (currentTimestamp - previousTimestamp) /
+        86400000;
+    }
+  }
+
+  if (nextRecord && nextTimestamp !== null) {
+    const local =
+      formatLocal(
+        nextTimestamp,
+        server.timezone
+      );
+
+    return {
+      code: server.code,
+      name: server.name,
+      timezone: server.timezone,
+      current_ob: requestedOB,
+      next_ob: nextOB,
+      status: "CONFIRMED",
+      status_label: "ĐÃ XÁC NHẬN",
+      prediction: {
+        status: "CONFIRMED",
+        date: local.date,
+        date_display: local.date_display,
+        time: local.time,
+        timezone: server.timezone,
+        datetime:
+          isoWithTimezone(
+            nextTimestamp,
+            server.timezone
+          ),
+        unix_timestamp:
+          Math.floor(nextTimestamp / 1000),
+        source:
+          nextRecord.source ||
+          "configured-data"
+      },
+      countdown:
+        countdown(nextTimestamp),
+      interval: {
+        days:
+          (nextTimestamp - currentTimestamp) /
+          86400000,
+        label:
+          `${Math.round(
+            (nextTimestamp - currentTimestamp) /
+            86400000
+          )} ngày`
+      },
+      historical: {
+        previous_ob:
+          previousRecord
+            ? Number(previousRecord.ob)
+            : currentRecord.previous_ob ?? null,
+        previous_to_current_days:
+          previousToCurrentDays === null
+            ? null
+            : Number(
+                previousToCurrentDays.toFixed(3)
+              ),
+        average_cycle_days:
+          averageCycle === null
+            ? null
+            : Number(
+                averageCycle.toFixed(3)
+              ),
+        samples: intervals.length
+      },
+      source:
+        nextRecord.source ||
+        "configured historical data",
+      notes: nextRecord.notes || ""
+    };
+  }
+
+  if (averageCycle !== null && averageCycle > 0) {
+    const predictedTimestamp =
+      currentTimestamp +
+      averageCycle * 86400000;
+
+    const local =
+      formatLocal(
+        predictedTimestamp,
+        server.timezone
+      );
+
+    return {
+      code: server.code,
+      name: server.name,
+      timezone: server.timezone,
+      current_ob: requestedOB,
+      next_ob: nextOB,
+      status: "PREDICTED",
+      status_label: "DỰ ĐOÁN",
+      prediction: {
+        status: "PREDICTED",
+        date: local.date,
+        date_display: local.date_display,
+        time: local.time,
+        timezone: server.timezone,
+        datetime:
+          isoWithTimezone(
+            predictedTimestamp,
+            server.timezone
+          ),
+        unix_timestamp:
+          Math.floor(
+            predictedTimestamp / 1000
+          ),
+        source:
+          "calculated from configured historical data"
+      },
+      countdown:
+        countdown(predictedTimestamp),
+      interval: {
+        days: averageCycle,
+        label:
+          `${Number(
+            averageCycle.toFixed(2)
+          )} ngày/OB`
+      },
+      historical: {
+        previous_ob:
+          previousRecord
+            ? Number(previousRecord.ob)
+            : currentRecord.previous_ob ?? null,
+        previous_to_current_days:
+          previousToCurrentDays === null
+            ? null
+            : Number(
+                previousToCurrentDays.toFixed(3)
+              ),
+        average_cycle_days:
+          Number(
+            averageCycle.toFixed(3)
+          ),
+        samples: intervals.length
+      },
+      source:
+        "configured historical data",
+      notes:
+        "Đây là thời gian dự đoán được tính từ dữ liệu lịch sử, không phải lịch chính thức."
+    };
+  }
 
   return {
-    success: true,
-    type: "prediction",
-    ob: `OB${obNumber}`,
-    date: predictedDate,
-    displayDate:
-      formatDate(
-        predictedDate,
-        "vi-VN"
-      ),
-    confirmed: false,
-    accuracy:
-      "DỰ ĐOÁN - KHÔNG PHẢI XÁC NHẬN CHÍNH THỨC",
-    averageIntervalDays: average,
-    basedOn: sorted.map(item => ({
-      ob: `OB${item.ob}`,
-      date: item.date
-    }))
+    code: server.code,
+    name: server.name,
+    timezone: server.timezone,
+    current_ob: requestedOB,
+    next_ob: nextOB,
+    status: "UNKNOWN",
+    status_label: "CHƯA CÓ DỮ LIỆU",
+    prediction: null,
+    countdown: null,
+    interval: null,
+    historical: {
+      previous_ob:
+        previousRecord
+          ? Number(previousRecord.ob)
+          : currentRecord.previous_ob ?? null,
+      previous_to_current_days:
+        previousToCurrentDays === null
+          ? null
+          : Number(
+              previousToCurrentDays.toFixed(3)
+            ),
+      average_cycle_days: null,
+      samples: intervals.length
+    },
+    source:
+      "configured historical data",
+    notes:
+      "Chưa đủ dữ liệu lịch sử để tính dự đoán."
   };
 }
 
-
-// ============================================================
-// SERVER TIME
-// ============================================================
-
-function getServerTimes(dateString) {
-
-  if (!dateString) {
-    return [];
-  }
-
-  const utcDate =
-    new Date(
-      dateString + "T00:00:00Z"
-    );
-
-  return SERVERS.map(server => {
-
-    let time = null;
-
-    try {
-
-      time =
-        new Intl.DateTimeFormat(
-          "en-GB",
-          {
-            timeZone:
-              server.timezone,
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: false
-          }
-        ).format(utcDate);
-
-    } catch (_) {
-
-      time = null;
-
-    }
-
-    return {
-      ...server,
-      updateDateUTC: dateString,
-      localTime: time
-    };
-
-  });
-}
-
-
-// ============================================================
-// MAIN HANDLER
-// ============================================================
-
-export default function handler(req, res) {
-
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "*"
-  );
-
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, OPTIONS"
-  );
-
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type"
-  );
-
-  res.setHeader(
-    "Cache-Control",
-    "public, max-age=60, s-maxage=60"
-  );
-
-
+module.exports = async (req, res) => {
   if (req.method === "OPTIONS") {
-    return res.status(200).end();
+    return res.status(204).set(headers()).end();
   }
-
 
   if (req.method !== "GET") {
-
-    return res.status(405).json({
+    return res.status(405).set(headers()).json({
       success: false,
-      error: "Method Not Allowed"
+      error: "METHOD_NOT_ALLOWED",
+      message: "Chỉ hỗ trợ GET."
     });
-
   }
 
+  const requestedOB =
+    normalizeOB(req.query.ob);
 
-  // ==========================================================
-  // SERVERS
-  // ==========================================================
+  if (requestedOB === null) {
+    if (
+      req.query.ob === undefined ||
+      req.query.ob === null ||
+      String(req.query.ob).trim() === ""
+    ) {
+      return res.status(400).set(headers()).json({
+        success: false,
+        error: "MISSING_OB",
+        message: "Vui lòng nhập số OB."
+      });
+    }
 
-  if (
-    String(req.query.servers)
-      .toLowerCase() === "true"
-  ) {
-
-    return res.status(200).json({
-      success: true,
-      type: "servers",
-      total: SERVERS.length,
-      data: SERVERS
+    return res.status(400).set(headers()).json({
+      success: false,
+      error: "INVALID_OB",
+      message: "OB không hợp lệ."
     });
-
   }
 
+  const requestedServer =
+    normalizeServer(req.query.server);
 
-  // ==========================================================
-  // ALL
-  // ==========================================================
+  try {
+    const data = loadData();
 
-  if (
-    String(req.query.all)
-      .toLowerCase() === "true"
-  ) {
+    let servers = Object.values(data.servers);
 
-    return res.status(200).json({
+    if (requestedServer) {
+      const selected =
+        data.servers[requestedServer];
 
-      success: true,
+      if (!selected) {
+        return res.status(404).set(headers()).json({
+          success: false,
+          error: "SERVER_NOT_FOUND",
+          message:
+            "Không tìm thấy server được yêu cầu.",
+          available_servers:
+            Object.keys(data.servers)
+        });
+      }
 
-      api:
-        "FFVN.TGM Free Fire OB API",
+      servers = [selected];
+    }
 
-      official:
-        false,
-
-      notice:
-        "API cộng đồng. Không phải API chính thức của Garena.",
-
-      total:
-        OB_DATABASE.length,
-
-      data:
-        OB_DATABASE.map(item => ({
-          ...item,
-          ob: `OB${item.ob}`,
-          displayDate:
-            formatDate(
-              item.date,
-              "vi-VN"
-            )
-        }))
-
-    });
-
-  }
-
-
-  // ==========================================================
-  // OB
-  // ==========================================================
-
-  const obNumber =
-    normalizeOB(
-      req.query.ob
+    const results = servers.map(server =>
+      makeServerPrediction(
+        server,
+        requestedOB
+      )
     );
 
+    const hasAnyData =
+      results.some(
+        result =>
+          result.status === "CONFIRMED" ||
+          result.status === "PREDICTED"
+      );
 
-  // Không nhập OB
-  if (!obNumber) {
+    const hasCurrentOB =
+      results.some(
+        result =>
+          result.status !== "UNKNOWN" ||
+          result.historical?.previous_ob !== null
+      );
 
-    return res.status(200).json({
+    if (!hasAnyData && !hasCurrentOB) {
+      return res.status(404).set(headers()).json({
+        success: false,
+        error: "OB_NOT_FOUND",
+        message:
+          "Chưa có dữ liệu cho OB này.",
+        query: {
+          ob: requestedOB,
+          server: requestedServer
+        },
+        data: {
+          source: "configured historical data",
+          last_updated:
+            data.last_updated || null
+        }
+      });
+    }
 
+    const first = results[0];
+
+    return res.status(200).set(headers()).json({
       success: true,
-
-      api:
-        "FFVN.TGM Free Fire OB API",
-
-      usage: {
-
-        example1:
-          "/api/ob?ob=55",
-
-        example2:
-          "/api/ob?ob=OB55",
-
-        example3:
-          "/api/ob?ob=100",
-
-        all:
-          "/api/ob?all=true",
-
-        servers:
-          "/api/ob?servers=true"
-
+      type: "ob_prediction",
+      query: {
+        ob: requestedOB,
+        server: requestedServer
       },
-
-      notice:
-        "Nhập OB để tra cứu hoặc dự đoán."
-
+      current_ob: requestedOB,
+      next_ob: requestedOB + 1,
+      prediction: requestedServer
+        ? first.prediction
+        : null,
+      countdown: requestedServer
+        ? first.countdown
+        : null,
+      servers: results,
+      data: {
+        source:
+          "configured historical data",
+        last_updated:
+          data.last_updated || null,
+        generated_at:
+          new Date().toISOString(),
+        official:
+          false,
+        disclaimer:
+          "Dữ liệu dự đoán dựa trên lịch sử được cấu hình. Không phải dữ liệu chính thức của Garena nếu không có nguồn chính thức xác nhận."
+      }
     });
-
-  }
-
-
-  // ==========================================================
-  // CHECK KNOWN OB
-  // ==========================================================
-
-  const known =
-    OB_DATABASE.find(
-      item =>
-        item.ob === obNumber
-    );
-
-
-  if (known) {
-
-    return res.status(200).json({
-
-      success: true,
-
-      type: "confirmed",
-
-      ob:
-        `OB${known.ob}`,
-
-      date:
-        known.date,
-
-      displayDate:
-        formatDate(
-          known.date,
-          "vi-VN"
-        ),
-
-      confirmed:
-        known.confirmed,
-
-      source:
-        known.source,
-
-      accuracy:
-        known.confirmed
-          ? "ĐÃ CÓ DỮ LIỆU XÁC NHẬN"
-          : "DỮ LIỆU CẤU HÌNH",
-
-      servers:
-        getServerTimes(
-          known.date
-        )
-
+  } catch (error) {
+    return res.status(500).set(headers()).json({
+      success: false,
+      error: "INTERNAL_ERROR",
+      message:
+        "Không thể xử lý dữ liệu OB.",
+      details:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : undefined
     });
-
   }
-
-
-  // ==========================================================
-  // PREDICTION
-  // ==========================================================
-
-  const prediction =
-    predictOB(
-      obNumber
-    );
-
-
-  if (!prediction.success) {
-
-    return res.status(400).json(
-      prediction
-    );
-
-  }
-
-
-  return res.status(200).json({
-
-    ...prediction,
-
-    servers:
-      getServerTimes(
-        prediction.date
-      ),
-
-    notice:
-      "Ngày này là kết quả tính toán từ dữ liệu lịch sử, không phải ngày được Garena xác nhận."
-
-  });
-
-  }
+};
